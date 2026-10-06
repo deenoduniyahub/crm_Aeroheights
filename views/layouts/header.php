@@ -22,7 +22,7 @@ $currencySymbol = Database::fetchValue("SELECT setting_value FROM system_setting
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/brand-tailwind.js"></script>
+    <script src="assets/js/brand-tailwind.js?v=<?= (int)@filemtime(__DIR__ . '/../../assets/js/brand-tailwind.js') ?>"></script>
 
     <!-- FontAwesome 6 Pro CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,7 +34,7 @@ $currencySymbol = Database::fetchValue("SELECT setting_value FROM system_setting
     <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Print Stylesheet -->
-    <link rel="stylesheet" href="assets/css/print.css">
+    <link rel="stylesheet" href="assets/css/print.css?v=<?= (int)@filemtime(__DIR__ . '/../../assets/css/print.css') ?>">
 
     <style>
         ::-webkit-scrollbar { width: 6px; height: 6px; }

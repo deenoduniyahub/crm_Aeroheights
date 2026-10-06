@@ -33,7 +33,7 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
     <meta charset="UTF-8">
     <title>Account Statement — <?= htmlspecialchars($agent['name']) ?> (<?= date('d-M-Y') ?>)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/brand-tailwind.js"></script>
+    <script src="assets/js/brand-tailwind.js?v=<?= (int)@filemtime(__DIR__ . '/../../assets/js/brand-tailwind.js') ?>"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>

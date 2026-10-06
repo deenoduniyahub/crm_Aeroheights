@@ -28,7 +28,7 @@ $loginError     = $_GET['error'] ?? '';
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/brand-tailwind.js"></script>
+    <script src="assets/js/brand-tailwind.js?v=<?= (int)@filemtime(__DIR__ . '/../../assets/js/brand-tailwind.js') ?>"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
