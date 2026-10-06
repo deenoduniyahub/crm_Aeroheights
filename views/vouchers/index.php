@@ -78,7 +78,6 @@ $hotelBookings = HotelBookingController::getAll(50);
                     <input type="text" id="vc_company_name" list="vc_company_name_options" value="Aeroheights Travels & Tours" placeholder="Aeroheights Travels & Tours" class="w-full border rounded-xl p-2.5 font-medium outline-none focus:ring-2 focus:ring-amber-500">
                     <datalist id="vc_company_name_options">
                         <option value="Aeroheights Travels & Tours">
-                        <option value="PAK LINES Travel & Tours">
                     </datalist>
                 </div>
                 <div>
@@ -387,7 +386,6 @@ $hotelBookings = HotelBookingController::getAll(50);
                     <input type="text" id="hb_company_name" list="hb_company_name_options" value="Aeroheights Travels & Tours" placeholder="Aeroheights Travels & Tours" class="w-full border rounded-xl p-2.5 font-medium outline-none focus:ring-2 focus:ring-teal-500">
                     <datalist id="hb_company_name_options">
                         <option value="Aeroheights Travels & Tours">
-                        <option value="PAK LINES Travel & Tours">
                     </datalist>
                 </div>
             </div>

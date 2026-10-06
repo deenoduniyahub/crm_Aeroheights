@@ -93,7 +93,7 @@ $backUrl = 'index.php?page=ticket_bookings';
             <div class="p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                     <label class="<?= $labelCls ?>">Airline PNR</label>
-                    <input id="f_pnr" class="<?= $inputCls ?> font-mono font-bold uppercase tracking-wider" maxlength="20" placeholder="e.g. 9PIXDW">
+                    <input id="f_pnr" class="<?= $inputCls ?> font-mono font-bold uppercase tracking-wider" maxlength="20" placeholder="PNR">
                 </div>
                 <div>
                     <label class="<?= $labelCls ?>">Airline</label>
@@ -147,7 +147,7 @@ $backUrl = 'index.php?page=ticket_bookings';
                 </div>
             </div>
             <div id="pasteBox" class="hidden px-5 pt-4">
-                <textarea id="pasteNames" rows="3" class="<?= $inputCls ?> font-mono" placeholder="One passenger per line, e.g.&#10;MR MUHAMMAD ASLAM&#10;MRS AYESHA BIBI"></textarea>
+                <textarea id="pasteNames" rows="3" class="<?= $inputCls ?> font-mono" placeholder="One passenger per line"></textarea>
                 <div class="flex justify-end mt-2"><button type="button" onclick="applyPastedNames()" class="text-[11px] font-bold text-white bg-slate-900 px-3 py-1.5 rounded-lg">Add These Passengers</button></div>
             </div>
             <div class="p-5 space-y-2" id="paxRows"></div>

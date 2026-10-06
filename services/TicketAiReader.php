@@ -34,11 +34,11 @@ PNR
   Confirmation Number, Record Locator, "<airline> booking reference"). It is usually 6 letters/digits.
 - Do NOT use portal/agency numbers (e.g. "Ref. No: AS261521473", "Booking # 1581"), CRS/GDS "Reservation Code"
   when an airline confirmation number is also printed, or e-ticket numbers.
-- If written like "SV/9PIXDW" return "9PIXDW". If two codes are joined like "KSUGTN/4062ED", return the first.
+- If written like "SV/ABC123" return "ABC123". If two codes are joined like "XYZ789/DEF456", return the first.
 
 PASSENGERS (every traveller, each once, in the order printed)
 - "name": full name in natural order GIVEN NAMES then SURNAME, uppercase, no title.
-  "AHMAD/AFZAAL MR" -> "AFZAAL AHMAD"; "BUTT, SHERAZ ALI MR" -> "SHERAZ ALI BUTT"; "MR SHAHID IQBAL" -> "SHAHID IQBAL".
+  "KHAN/AHMED MR" -> "AHMED KHAN"; "MALIK, ALI RAZA MR" -> "ALI RAZA MALIK"; "MR USMAN TARIQ" -> "USMAN TARIQ".
   Drop "FNU"/"LNU" placeholders ("FNU USAMA" -> "USAMA").
 - Some tickets print several travellers on one line separated only by wide spaces, without titles, e.g.
   "HASEEN BIBI   IQSA BIBI   MUHAMMAD MUJAHID" — that is THREE passengers. A single person's name is normally

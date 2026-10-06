@@ -208,11 +208,11 @@ function openNewAgentModal() {
                     <input type="hidden" id="agent_modal_id" value="">
                     <div>
                         <label class="block font-semibold mb-1">Agent / Contact Name</label>
-                        <input type="text" id="agent_modal_name" required placeholder="e.g. Shah E Lasani" class="w-full border rounded-xl p-2.5">
+                        <input type="text" id="agent_modal_name" required placeholder="Agent name" class="w-full border rounded-xl p-2.5">
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Agency / Company Name</label>
-                        <input type="text" id="agent_modal_company" placeholder="e.g. Shah E Lasani Travel Services" class="w-full border rounded-xl p-2.5">
+                        <input type="text" id="agent_modal_company" placeholder="Company name" class="w-full border rounded-xl p-2.5">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -291,7 +291,7 @@ function openNewVendorModal() {
                     <input type="hidden" id="vendor_modal_id" value="">
                     <div>
                         <label class="block font-semibold mb-1">Vendor / Supplier Name</label>
-                        <input type="text" id="vendor_modal_name" required placeholder="e.g. Chatta Travels" class="w-full border rounded-xl p-2.5">
+                        <input type="text" id="vendor_modal_name" required placeholder="Supplier name" class="w-full border rounded-xl p-2.5">
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Service Type</label>

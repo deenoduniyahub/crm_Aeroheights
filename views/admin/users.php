@@ -103,11 +103,11 @@ function openNewUserModal() {
                     <input type="hidden" id="user_modal_id" value="">
                     <div>
                         <label class="block font-semibold mb-1">Username</label>
-                        <input type="text" id="user_modal_username" required placeholder="e.g. sarah_ops" pattern="[a-zA-Z0-9_.]{3,50}" class="w-full border rounded-xl p-2.5 font-mono">
+                        <input type="text" id="user_modal_username" required placeholder="Username" pattern="[a-zA-Z0-9_.]{3,50}" class="w-full border rounded-xl p-2.5 font-mono">
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Full Name</label>
-                        <input type="text" id="user_modal_fullname" placeholder="e.g. Sarah Khan" class="w-full border rounded-xl p-2.5">
+                        <input type="text" id="user_modal_fullname" placeholder="Full name" class="w-full border rounded-xl p-2.5">
                     </div>
                     <div>
                         <label class="block font-semibold mb-1">Email (sign-in + password-reset codes)</label>

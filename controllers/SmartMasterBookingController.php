@@ -23,7 +23,7 @@ class SmartMasterBookingController {
 
     private static function isKsa(string $code): bool { return in_array(strtoupper($code), self::KSA_AIRPORTS, true); }
 
-    /** "MUHAMMAD AFZAAL" -> "Muhammad Afzaal" (Master Bookings keep names in this style). */
+    /** "AHMED KHAN" -> "Ahmed Khan" (Master Bookings keep names in this style). */
     public static function displayName(string $name): string {
         return ucwords(strtolower(trim(preg_replace('/\s+/', ' ', $name))), " -'");
     }

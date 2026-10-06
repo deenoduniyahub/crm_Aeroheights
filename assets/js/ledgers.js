@@ -78,7 +78,7 @@ function openAgentPaymentModal(agentId, agentName) {
                         </div>
                         <div>
                             <label class="block font-semibold mb-1 text-slate-700">Deposit Slip / Ref #</label>
-                            <input type="text" id="modal_pay_receipt" placeholder="e.g. UBL-7689" class="w-full border border-slate-300 rounded-xl p-2.5 font-mono outline-none focus:ring-2 focus:ring-emerald-500">
+                            <input type="text" id="modal_pay_receipt" placeholder="Receipt / slip no." class="w-full border border-slate-300 rounded-xl p-2.5 font-mono outline-none focus:ring-2 focus:ring-emerald-500">
                         </div>
                     </div>
                     <div>
@@ -318,7 +318,7 @@ function openVendorPaymentModal(vendorId, vendorName) {
                         </div>
                         <div>
                             <label class="block font-semibold mb-1 text-slate-700">Transaction Ref #</label>
-                            <input type="text" id="vmodal_ref_number" placeholder="e.g. TXN-8902" class="w-full border border-slate-300 rounded-xl p-2.5 font-mono outline-none focus:ring-2 focus:ring-cyan-600">
+                            <input type="text" id="vmodal_ref_number" placeholder="Transaction ref." class="w-full border border-slate-300 rounded-xl p-2.5 font-mono outline-none focus:ring-2 focus:ring-cyan-600">
                         </div>
                     </div>
                     <div>
