@@ -57,15 +57,9 @@ $tomorrowTotal = $quickStats['tomorrow']['arrivals'] + $quickStats['tomorrow']['
             <span>Complete Package</span>
         </a>
 
-        <!-- Customized Air Tickets -->
-        <a href="index.php?page=tickets" class="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center transition <?= $currentRoute === 'tickets' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-700 hover:bg-slate-100/80' ?>">
-            <i class="fa-solid fa-ticket w-5 text-center mr-2.5 <?= $currentRoute === 'tickets' ? 'text-white' : 'text-sky-500' ?>"></i>
-            <span>Tickets</span>
-        </a>
-
         <!-- Ticket Booking (AI: original ticket + passports) -->
-        <a href="index.php?page=ticket_bookings" class="w-full text-left ml-4 pl-3.5 pr-3 py-2 rounded-xl text-xs font-semibold flex items-center transition border-l-2 <?= $currentRoute === 'ticket_bookings' ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20 border-blue-600' : 'text-slate-700 hover:bg-slate-100/80 border-sky-200' ?>" style="width: calc(100% - 1rem);">
-            <i class="fa-solid fa-wand-magic-sparkles w-5 text-center mr-2.5 <?= $currentRoute === 'ticket_bookings' ? 'text-white' : 'text-violet-500' ?>"></i>
+        <a href="index.php?page=ticket_bookings" class="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center transition <?= in_array($currentRoute, ['ticket_bookings', 'tickets'], true) ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' : 'text-slate-700 hover:bg-slate-100/80' ?>">
+            <i class="fa-solid fa-ticket w-5 text-center mr-2.5 <?= in_array($currentRoute, ['ticket_bookings', 'tickets'], true) ? 'text-white' : 'text-sky-500' ?>"></i>
             <span>Ticket Booking</span>
         </a>
     </div>

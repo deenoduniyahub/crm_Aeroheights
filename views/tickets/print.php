@@ -237,7 +237,7 @@ $autoDownload = !empty($_GET['download']);
 
 <div class="toolbar">
     <div class="grp">
-        <a href="index.php?page=tickets" class="btn-light"><i class="fa-solid fa-arrow-left"></i> Tickets</a>
+        <a href="index.php?page=ticket_bookings" class="btn-light"><i class="fa-solid fa-arrow-left"></i> Ticket Booking</a>
         <?php if (!empty($record['original_path'])): ?>
             <a href="index.php?api=air_ticket_original&id=<?= (int)$record['id'] ?>" target="_blank" class="btn-light"><i class="fa-regular fa-file-lines"></i> Original Ticket</a>
         <?php endif; ?>

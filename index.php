@@ -439,6 +439,13 @@ if ($page === 'print_ticket') {
     exit;
 }
 
+// No separate Tickets tab: Ticket Booking is the ticket list. The ticket form (?page=tickets&id=N / &new=1)
+// stays because Ticket Booking opens it to edit travellers and flights.
+if ($page === 'tickets' && empty($_GET['id']) && empty($_GET['new'])) {
+    header('Location: index.php?page=ticket_bookings');
+    exit;
+}
+
 // Admin-only pages must be gated before any layout HTML is streamed, otherwise the
 // redirect below cannot fire (PHP cannot send a Location header once output has started).
 if ($page === 'users') {

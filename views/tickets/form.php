@@ -16,12 +16,12 @@ $record = null;
 if ($ticketId > 0) {
     $record = AirTicketController::getById($ticketId);
     if (!$record) {
-        echo '<main class="md:col-span-9"><div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-rose-600">Ticket not found. <a href="index.php?page=tickets" class="text-blue-600 underline">Back to tickets</a></div></main>';
+        echo '<main class="md:col-span-9"><div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-rose-600">Ticket not found. <a href="index.php?page=ticket_bookings" class="text-blue-600 underline">Back to Ticket Booking</a></div></main>';
         return;
     }
 }
 if (!Auth::canWrite()) {
-    echo '<main class="md:col-span-9"><div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-slate-600">Your account is view-only. <a href="index.php?page=tickets" class="text-blue-600 underline">Back to tickets</a></div></main>';
+    echo '<main class="md:col-span-9"><div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-slate-600">Your account is view-only. <a href="index.php?page=ticket_bookings" class="text-blue-600 underline">Back to Ticket Booking</a></div></main>';
     return;
 }
 
@@ -32,7 +32,7 @@ foreach (array_keys(AirTicketController::AIRLINES) as $code) {
 $inputCls = 'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400';
 $labelCls = 'block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1';
 $fromBookings = ($_GET['back'] ?? '') === 'ticket_bookings';
-$backUrl = $fromBookings ? 'index.php?page=ticket_bookings' : 'index.php?page=tickets';
+$backUrl = 'index.php?page=ticket_bookings';
 ?>
 
 <main class="md:col-span-9 space-y-6">
@@ -40,7 +40,7 @@ $backUrl = $fromBookings ? 'index.php?page=ticket_bookings' : 'index.php?page=ti
     <!-- Header Bar -->
     <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-4">
         <div>
-            <a href="<?= $backUrl ?>" class="text-[11px] font-semibold text-slate-500 hover:text-sky-600"><i class="fa-solid fa-arrow-left mr-1"></i> <?= $fromBookings ? 'Ticket Booking' : 'All Tickets' ?></a>
+            <a href="<?= $backUrl ?>" class="text-[11px] font-semibold text-slate-500 hover:text-sky-600"><i class="fa-solid fa-arrow-left mr-1"></i> Ticket Booking</a>
             <h2 class="text-base font-bold text-slate-800 flex items-center mt-1">
                 <i class="fa-solid fa-ticket text-sky-500 mr-2"></i>
                 <?= $record ? 'Edit Ticket ' . htmlspecialchars($record['ticket_no']) : 'Customize a New Ticket' ?>
