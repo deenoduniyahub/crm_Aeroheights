@@ -126,10 +126,6 @@ $tomorrowTotal = $quickStats['tomorrow']['arrivals'] + $quickStats['tomorrow']['
                 <span class="text-slate-300 font-sans">Office:</span>
                 <span class="font-bold text-amber-300">+92 303 5137777</span>
             </a>
-            <a href="tel:+923034512512" class="flex justify-between items-center bg-white/5 hover:bg-white/10 p-2 rounded-xl border border-white/10 transition">
-                <span class="text-slate-300 font-sans">Mobile:</span>
-                <span class="font-bold text-amber-300">+92 303 4512512</span>
-            </a>
             <a href="https://aeroheightstravels.com/" target="_blank" rel="noopener" class="block text-center text-[10px] font-sans text-blue-300 hover:text-white pt-1">aeroheightstravels.com</a>
         </div>
     </div>

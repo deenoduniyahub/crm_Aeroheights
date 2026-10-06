@@ -23,7 +23,6 @@ $agencyAddr  = $settings['agency_address'] ?? '';
 // Pakistan helpline contacts printed on every customized ticket.
 $helplines = [
     ['Office No.', '+92 303 5137777'],
-    ['Helpline No.', '+92 303 4512512'],
 ];
 
 $airlineCode = $t['airline_code'];

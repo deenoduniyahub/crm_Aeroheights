@@ -24,7 +24,6 @@ if (!$agent) {
 $agencyLogo = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_logo'") ?: 'assets/img/logo.png';
 $agencyName = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_name'") ?: 'Aeroheights Travels & Tours';
 $agencyPhone = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_phone'") ?: '+92 303 5137777';
-$makkahHelp = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'makkah_helpline'") ?: '+92 303 4512512';
 $bankDetails = array_values(array_filter(array_map('trim', explode("
 ", (string)(Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'bank_details'") ?: '')))));
 ?>
@@ -58,7 +57,7 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                 <div>
                     <h1 class="text-xl font-black text-slate-900 uppercase tracking-tight"><?= htmlspecialchars($agencyName) ?></h1>
                     <p class="text-xs text-slate-500 font-bold tracking-wide">Umrah & Travel Services — Client Account Statement</p>
-                    <p class="text-[11px] text-slate-600 mt-1"><strong>Phone:</strong> <?= htmlspecialchars($agencyPhone) ?> | <strong>Helpline:</strong> <?= htmlspecialchars($makkahHelp) ?></p>
+                    <p class="text-[11px] text-slate-600 mt-1"><strong>Phone / WhatsApp:</strong> <?= htmlspecialchars($agencyPhone) ?></p>
                 </div>
             </div>
             <div class="text-right">

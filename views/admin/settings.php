@@ -157,11 +157,11 @@ $settings = AdminController::getSettings();
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Office No. (printed on vouchers)</label>
+                    <label class="block font-semibold text-slate-700 mb-1">Official Office No. (vouchers)</label>
                     <input type="text" id="set_makkah_helpline" value="<?= htmlspecialchars($settings['makkah_helpline'] ?? '+92 303 5137777') ?>" required class="w-full border rounded-xl p-2.5 font-mono">
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Helpline No. (printed on vouchers)</label>
+                    <label class="block font-semibold text-slate-700 mb-1">Secondary Helpline (vouchers only)</label>
                     <input type="text" id="set_madinah_helpline" value="<?= htmlspecialchars($settings['madinah_helpline'] ?? '+92 303 4512512') ?>" required class="w-full border rounded-xl p-2.5 font-mono">
                 </div>
                 <div>
@@ -174,7 +174,7 @@ $settings = AdminController::getSettings();
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Madinah Team WhatsApp</label>
                     <input type="text" id="set_madinah_team_whatsapp" value="<?= htmlspecialchars($settings['madinah_team_whatsapp'] ?? '+92 303 5137777') ?>" class="w-full border rounded-xl p-2.5 font-mono">
-                    <p class="text-[10px] text-slate-400 mt-1">Used by the Operations Manifest "Send" buttons.</p>
+                    <p class="text-[10px] text-slate-400 mt-1">Used by the Operations Manifest "Send" buttons (official number handles Makkah &amp; Madinah).</p>
                 </div>
                 <div class="sm:col-span-2">
                     <label class="block font-semibold text-slate-700 mb-1">Bank Details (printed on agent statements, one account per line)</label>
