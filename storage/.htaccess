@@ -1,0 +1,2 @@
+# Booking files must be served only through index.php download endpoint.
+Require all denied

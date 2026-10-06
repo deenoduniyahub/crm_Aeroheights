@@ -1,0 +1,99 @@
+/**
+ * Dedicated High-Definition Print Stylesheet for A4 Vouchers & Ledgers
+ * Hides web navigation, enforces high-contrast borders, clean typography, and precise layout scaling.
+ */
+
+@media print {
+    /* Hide all web dashboard navigation and UI controls */
+    .no-print,
+    header,
+    aside,
+    #flashNotification,
+    #dynamicModalContainer,
+    #globalToastContainer,
+    button,
+    input[type="submit"] {
+        display: none !important;
+    }
+
+    /* Force display for printable containers */
+    .print-only {
+        display: block !important;
+    }
+
+    /* Page Setup */
+    @page {
+        size: A4 portrait;
+        margin: 10mm 12mm 10mm 12mm;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 11pt !important;
+        line-height: 1.4 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Table Formatting for Clean Invoices & Vouchers */
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    th, td {
+        border: 1px solid #64748b !important;
+        padding: 6px 8px !important;
+    }
+
+    th {
+        background-color: #f1f5f9 !important;
+        color: #0f172a !important;
+        font-weight: 700 !important;
+    }
+
+    /* Preserve Urdu text styling */
+    .font-urdu {
+        font-family: 'Amiri', serif !important;
+        direction: rtl !important;
+        text-align: right !important;
+        font-size: 11pt !important;
+        line-height: 1.8 !important;
+    }
+
+    /* Monospace fonts for Passports, Numbers & Amounts */
+    .font-mono {
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Container adjustments */
+    .max-w-4xl {
+        max-width: 100% !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+}
+

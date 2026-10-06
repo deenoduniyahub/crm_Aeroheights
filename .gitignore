@@ -1,0 +1,5 @@
+config/env.php
+storage/booking_files/*
+!storage/booking_files/index.html
+storage/booking_imports/*
+!storage/booking_imports/.htaccess
