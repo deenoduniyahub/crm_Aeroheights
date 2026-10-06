@@ -11,7 +11,7 @@ function h($value): string {
 $ticketId = (int)($_GET['id'] ?? 0);
 $record = $ticketId > 0 ? AirTicketController::getById($ticketId) : null;
 if (!$record) {
-    die('<div style="font-family:Arial;padding:30px;text-align:center;color:#b91c1c;">Ticket not found.</div>');
+    die('<div style="font-family:Jost,Arial,sans-serif;padding:30px;text-align:center;color:#E0475B;">Ticket not found.</div>');
 }
 $t = $record['data'];
 
@@ -51,12 +51,12 @@ $layover = static function (array $prev, array $next): string {
 };
 
 $statusTone = [
-    'Confirmed' => ['#ecfdf5', '#047857', 'fa-circle-check'],
-    'Partially Confirmed' => ['#fffbeb', '#b45309', 'fa-circle-half-stroke'],
-    'On Request' => ['#eff6ff', '#1d4ed8', 'fa-hourglass-half'],
-    'On Hold' => ['#eef6fd', '#1a6bb8', 'fa-circle-pause'],
-    'Cancelled' => ['#fef2f2', '#b91c1c', 'fa-circle-xmark'],
-][$t['status']] ?? ['#ecfdf5', '#047857', 'fa-circle-check'];
+    'Confirmed' => ['#EDF8FA', '#3B8296', 'fa-circle-check'],
+    'Partially Confirmed' => ['#FFFAEB', '#A67C00', 'fa-circle-half-stroke'],
+    'On Request' => ['#EEF6FD', '#26206F', 'fa-hourglass-half'],
+    'On Hold' => ['#eef6fd', '#285A9B', 'fa-circle-pause'],
+    'Cancelled' => ['#FDF0F2', '#E0475B', 'fa-circle-xmark'],
+][$t['status']] ?? ['#EDF8FA', '#3B8296', 'fa-circle-check'];
 
 $paxCounts = array_count_values(array_column($t['passengers'], 'type'));
 $paxSummary = implode(' · ', array_map(static fn($type, $n) => $n . ' ' . $type . ($n > 1 ? 's' : ''), array_keys($paxCounts), $paxCounts));
@@ -70,36 +70,36 @@ $autoDownload = !empty($_GET['download']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($fileName) ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --ink: #161a35;
             --ink-2: #26206f;
-            --ink-soft: #3b4559;
+            --ink-soft: #4A5170;
             --accent: #2183DF;
             --accent-2: #FEC624;
-            --muted: #7a8394;
-            --hair: #e7e9ee;
+            --muted: #8A90A8;
+            --hair: #DCE5ED;
             --paper: #ffffff;
             --wash: #f6f8fc;
         }
         * { box-sizing: border-box; }
-        body { margin: 0; padding: 24px 12px; background: #dde2ea; color: var(--ink); font: 500 11px/1.45 'Jost', Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+        body { margin: 0; padding: 24px 12px; background: #DCE5ED; color: var(--ink); font: 500 11px/1.45 'Jost', Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .mono { font-family: 'Jost', Arial, sans-serif; font-variant-numeric: tabular-nums; }
         .cap { font-size: 8px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 
         /* Toolbar (screen only) */
         .toolbar { max-width: 794px; margin: 0 auto 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
         .toolbar .grp { display: flex; flex-wrap: wrap; gap: 8px; }
         .toolbar a, .toolbar button { display: inline-flex; align-items: center; gap: 7px; border: 0; border-radius: 9px; padding: 8px 14px; font: 700 11.5px 'Jost', sans-serif; cursor: pointer; text-decoration: none; }
-        .btn-light { background: #fff; color: #334155; box-shadow: inset 0 0 0 1px #cbd5e1; }
+        .btn-light { background: #fff; color: #4A5170; box-shadow: inset 0 0 0 1px #DCE5ED; }
         .btn-dark { background: var(--ink); color: #fff; }
-        .btn-accent { background: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(33, 131, 223,.28); }
+        .btn-accent { background: #26206F; color: #fff; box-shadow: 0 6px 16px rgba(38, 32, 111,.28); }
         .btn-accent[disabled] { opacity: .6; cursor: wait; }
 
         /* Sheet */
-        .sheet { position: relative; width: 794px; max-width: 100%; margin: 0 auto; background: var(--paper); border-radius: 12px; overflow: hidden; box-shadow: 0 18px 40px rgba(14,20,34,.16); }
+        .sheet { position: relative; width: 794px; max-width: 100%; margin: 0 auto; background: var(--paper); border-radius: 12px; overflow: hidden; box-shadow: 0 18px 40px rgba(22,26,53,.16); }
         .edge { height: 4px; background: linear-gradient(90deg, var(--ink) 0 62%, var(--accent) 62% 88%, var(--accent-2) 88%); }
         .inner { padding: 22px 34px 18px; }
 
@@ -161,12 +161,12 @@ $autoDownload = !empty($_GET['download']);
         .path { flex: 1; text-align: center; min-width: 90px; }
         .path .fl { font-size: 9px; font-weight: 700; color: var(--ink-soft); letter-spacing: .06em; }
         .path .ln { position: relative; height: 14px; margin: 3px 0; }
-        .path .ln::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed #c9ced8; }
+        .path .ln::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed #DCE5ED; }
         .path .ln::after { content: ""; position: absolute; right: 0; top: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
         .path .ln i { position: relative; z-index: 1; background: #fff; padding: 0 6px; color: var(--accent); font-size: 11px; line-height: 14px; }
         .path .ln span.o { position: absolute; left: 0; top: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--accent); background: #fff; }
         .path .du { font-size: 8.5px; color: var(--muted); font-weight: 600; }
-        .stub { width: 148px; flex-shrink: 0; position: relative; padding: 9px 14px; border-left: 1.5px dashed #d8dce4; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+        .stub { width: 148px; flex-shrink: 0; position: relative; padding: 9px 14px; border-left: 1.5px dashed #DCE5ED; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
         .stub::before, .stub::after { content: ""; position: absolute; left: -7.5px; width: 13px; height: 13px; border-radius: 50%; background: #fff; border: 1px solid var(--hair); }
         .stub::before { border-top-color: #fff; }
         .stub::after { border-bottom-color: #fff; }
@@ -174,7 +174,7 @@ $autoDownload = !empty($_GET['download']);
         .stub::after { bottom: -7px; }
         .stub .r { display: flex; justify-content: space-between; gap: 6px; font-size: 8.5px; color: var(--muted); font-weight: 600; }
         .stub .r b { color: var(--ink); font-size: 9.5px; font-weight: 700; white-space: nowrap; }
-        .conn { margin: 5px 0 0 74px; padding-left: 16px; font-size: 9px; font-weight: 700; color: #a2560d; }
+        .conn { margin: 5px 0 0 74px; padding-left: 16px; font-size: 9px; font-weight: 700; color: #A67C00; }
         .conn i { margin-right: 4px; }
 
         /* Passengers */
@@ -185,9 +185,9 @@ $autoDownload = !empty($_GET['download']);
         table.pax .n { color: var(--muted); font-weight: 700; width: 26px; }
         table.pax .nm { font-weight: 800; letter-spacing: .02em; }
         table.pax .tt { color: var(--muted); font-weight: 700; margin-right: 3px; font-size: 9.5px; }
-        table.pax tr.lead td { background: #fff7ef; }
+        table.pax tr.lead td { background: #FFFAEB; }
         table.pax tr.lead td.n { box-shadow: inset 2px 0 0 var(--accent); }
-        .lead-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(33, 131, 223,.45); color: #b4570c; font-size: 7.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; vertical-align: 1px; }
+        .lead-tag { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(33, 131, 223,.45); color: #A67C00; font-size: 7.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; vertical-align: 1px; }
         .ty { font-size: 9px; font-weight: 700; color: var(--ink-soft); }
 
         /* Notes + helpline */
@@ -218,7 +218,7 @@ $autoDownload = !empty($_GET['download']);
             .band { flex-wrap: wrap; }
             .band > div { flex: 1 1 40%; border-left: 0; border-top: 1px solid rgba(255,255,255,.08); }
             .flight { flex-wrap: wrap; }
-            .stub { width: 100%; border-left: 0; border-top: 1.5px dashed #d8dce4; flex-direction: row; flex-wrap: wrap; }
+            .stub { width: 100%; border-left: 0; border-top: 1.5px dashed #DCE5ED; flex-direction: row; flex-wrap: wrap; }
             .stub::before, .stub::after { display: none; }
             .pt { width: 96px; }
             .foot-grid { grid-template-columns: 1fr; }
@@ -272,7 +272,7 @@ $autoDownload = !empty($_GET['download']);
             <div class="lead"><span class="cap">Lead Passenger</span><span class="v"><?= h($t['family_head']) ?></span><small><?= count($t['passengers']) ?> traveller<?= count($t['passengers']) > 1 ? 's' : '' ?> &middot; <?= h($paxSummary) ?></small></div>
             <div><span class="cap">Issued</span><span class="v"><?= h($fmtShort($t['issue_date'])) ?></span></div>
             <div><span class="cap">Class</span><span class="v"><?= h($t['cabin']) ?></span></div>
-            <div><span class="cap">Status</span><span class="pill"><span class="dot" style="background:<?= $statusTone[1] === '#047857' ? '#34d399' : $statusTone[1] ?>"></span><?= h($t['status']) ?></span></div>
+            <div><span class="cap">Status</span><span class="pill"><span class="dot" style="background:<?= $statusTone[1] === '#3B8296' ? '#37D4D9' : $statusTone[1] ?>"></span><?= h($t['status']) ?></span></div>
         </div>
 
         <div class="sec"><span class="ttl">Flight Itinerary</span><span class="meta"><?= h(str_replace('-', ' → ', $route)) ?></span></div>
@@ -310,7 +310,7 @@ $autoDownload = !empty($_GET['download']);
                             <div class="pt to">
                                 <div class="tm"><?= h($s['arr_time'] ?: '--:--') ?></div>
                                 <div class="ap"><span><?= h($s['to_city']) ?></span> <b><?= h($s['to'] ?: '—') ?></b></div>
-                                <div class="sub"><?= $s['arr_date'] && $s['arr_date'] !== $s['dep_date'] ? '<b style="color:#b4570c">+1</b> ' . h($fmtShort($s['arr_date'])) : '' ?><?= $s['to_terminal'] ? ($s['arr_date'] !== $s['dep_date'] ? ' · ' : '') . 'Terminal ' . h($s['to_terminal']) : '' ?>&nbsp;</div>
+                                <div class="sub"><?= $s['arr_date'] && $s['arr_date'] !== $s['dep_date'] ? '<b style="color:#A67C00">+1</b> ' . h($fmtShort($s['arr_date'])) : '' ?><?= $s['to_terminal'] ? ($s['arr_date'] !== $s['dep_date'] ? ' · ' : '') . 'Terminal ' . h($s['to_terminal']) : '' ?>&nbsp;</div>
                             </div>
                         </div>
                         <div class="stub">

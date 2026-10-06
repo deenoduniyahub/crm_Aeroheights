@@ -42,13 +42,13 @@ class AccountController {
         );
 
         $name = htmlspecialchars((string)($user['full_name'] ?: $user['username']));
-        $html = '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;border:1px solid #dce5ed;border-radius:12px;overflow:hidden">'
+        $html = '<div style="font-family:Jost,Arial,sans-serif;max-width:480px;margin:auto;border:1px solid #dce5ed;border-radius:12px;overflow:hidden">'
               . '<div style="background:#26206f;color:#fff;padding:16px 20px;font-weight:bold;font-size:16px">Aeroheights Travels &amp; Tours &middot; CRM</div>'
               . '<div style="padding:20px;color:#161a35;font-size:14px;line-height:1.5">'
               . "<p>Assalam o Alaikum {$name},</p><p>Use this code to set a new password for your CRM account:</p>"
               . '<p style="font-size:30px;font-weight:bold;letter-spacing:8px;color:#2183DF;text-align:center;margin:18px 0">' . $code . '</p>'
               . '<p>The code expires in ' . self::OTP_MINUTES . ' minutes. If you did not ask for it, ignore this email &mdash; your password stays the same.</p>'
-              . '</div><div style="background:#f6f8fc;color:#636e8d;font-size:11px;padding:10px 20px">crm.aeroheightstravels.com &middot; +92 303 5137777</div></div>';
+              . '</div><div style="background:#f6f8fc;color:#8A90A8;font-size:11px;padding:10px 20px">crm.aeroheightstravels.com &middot; +92 303 5137777</div></div>';
         $text = "Aeroheights CRM password reset code: {$code}\nIt expires in " . self::OTP_MINUTES . " minutes. If you did not ask for it, ignore this email.";
 
         if (!Mailer::send((string)$user['email'], 'Your Aeroheights CRM code: ' . $code, $html, $text)) {

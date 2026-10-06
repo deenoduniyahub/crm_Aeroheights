@@ -46,20 +46,21 @@ if (!$agent) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap">
     <title>Agent Statement - <?= htmlspecialchars($agent['company_name'] ?? $agent['name']) ?></title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 11px; margin: 20px; color: #1e293b; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-b: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 15px; }
-        .agency-title { font-size: 18px; font-weight: bold; color: #0f172a; text-transform: uppercase; }
-        .sub-title { font-size: 12px; color: #64748b; }
-        .meta-box { border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; }
+        body { font-family:Jost,Arial,sans-serif; font-size: 11px; margin: 20px; color: #161A35; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-b: 2px solid #161A35; padding-bottom: 10px; margin-bottom: 15px; }
+        .agency-title { font-size: 18px; font-weight: bold; color: #161A35; text-transform: uppercase; }
+        .sub-title { font-size: 12px; color: #8A90A8; }
+        .meta-box { border: 1px solid #DCE5ED; border-radius: 6px; padding: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; }
         .meta-item { line-height: 1.4; }
-        .meta-item strong { color: #334155; }
+        .meta-item strong { color: #4A5170; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #cbd5e1; padding: 6px 8px; text-align: left; }
-        th { background-color: #f1f5f9; text-transform: uppercase; font-size: 9px; color: #334155; }
+        th, td { border: 1px solid #DCE5ED; padding: 6px 8px; text-align: left; }
+        th { background-color: #F6F8FC; text-transform: uppercase; font-size: 9px; color: #4A5170; }
         .text-right { text-align: right; }
-        .font-mono { font-family: monospace; }
+        .font-mono { font-family: 'Jost', Arial, sans-serif; font-variant-numeric: tabular-nums; }
         .balance-card { text-align: right; font-size: 13px; font-weight: bold; }
         @media print {
             body { margin: 0; }
@@ -69,7 +70,7 @@ if (!$agent) {
 </head>
 <body>
     <div class="no-print" style="margin-bottom: 15px;">
-        <button onclick="window.print()" style="padding: 8px 16px; background-color: #0f172a; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        <button onclick="window.print()" style="padding: 8px 16px; background-color: #161A35; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
             Print Statement
         </button>
     </div>
@@ -96,8 +97,8 @@ if (!$agent) {
             <strong>Email:</strong> <?= htmlspecialchars($agent['email'] ?? '-') ?>
         </div>
         <div class="balance-card">
-            <span style="font-size: 10px; color: #64748b; text-transform: uppercase;">Closing Net Balance</span><br>
-            <span style="color: <?= $currentBalance > 0 ? '#1e40af' : '#059669' ?>;">
+            <span style="font-size: 10px; color: #8A90A8; text-transform: uppercase;">Closing Net Balance</span><br>
+            <span style="color: <?= $currentBalance > 0 ? '#26206F' : '#3B8296' ?>;">
                 <?= number_format($currentBalance, 2) ?> SAR
             </span>
         </div>
@@ -121,7 +122,7 @@ if (!$agent) {
         <tbody>
             <?php if (empty($entries)): ?>
                 <tr>
-                    <td colspan="10" style="text-align: center; color: #94a3b8; padding: 20px;">No transaction records found.</td>
+                    <td colspan="10" style="text-align: center; color: #8A90A8; padding: 20px;">No transaction records found.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($entries as $entry): ?>
@@ -133,10 +134,10 @@ if (!$agent) {
                         <td><strong><?= htmlspecialchars((string)($entry['passenger_name'] ?? '-')) ?></strong></td>
                         <td class="font-mono"><?= htmlspecialchars((string)($entry['passport_number'] ?? '-')) ?></td>
                         <td><?= htmlspecialchars($entry['service_type']) ?></td>
-                        <td class="text-right font-mono" style="color: #b91c1c;">
+                        <td class="text-right font-mono" style="color: #E0475B;">
                             <?= (float)$entry['debit_sar'] > 0 ? number_format((float)$entry['debit_sar'], 2) : '-' ?>
                         </td>
-                        <td class="text-right font-mono" style="color: #047857;">
+                        <td class="text-right font-mono" style="color: #3B8296;">
                             <?= (float)$entry['credit_sar'] > 0 ? number_format((float)$entry['credit_sar'], 2) : '-' ?>
                         </td>
                         <td class="text-right font-mono" style="font-weight: bold;">

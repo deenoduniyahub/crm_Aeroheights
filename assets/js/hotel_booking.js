@@ -24,7 +24,7 @@ function setHotelBookingField(id, value) {
 }
 
 function hbEscapeHtml(value) {
-    const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+    const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#26206F;'};
     return String(value ?? '').replace(/[&<>"']/g, m => map[m]);
 }
 

@@ -25,7 +25,7 @@ $quoteId = (int)($_GET['id'] ?? 0);
 if ($quoteId > 0) {
     $record = PackageQuotationController::getById($quoteId);
     if (!$record) {
-        die('<div style="font-family:Arial;padding:30px;text-align:center;color:#b91c1c;">Quotation not found.</div>');
+        die('<div style="font-family:Jost,Arial,sans-serif;padding:30px;text-align:center;color:#E0475B;">Quotation not found.</div>');
     }
     $q = $record['data'];
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -100,7 +100,7 @@ $note       = $in('note');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quotation <?= h($quoteNo) ?> — <?= h($clientName) ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -108,20 +108,20 @@ $note       = $in('note');
             --ink-2: #26206f;
             --orange: #2183DF;
             --amber: #FEC624;
-            --muted: #64748b;
+            --muted: #8A90A8;
             --soft: #f6f8fc;
             --line: #dce5ed;
             --tint: #eef6fd;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Jost', Arial, sans-serif; background: #e2e8f0; margin: 0; padding: 24px; color: var(--ink); }
+        body { font-family: 'Jost', Arial, sans-serif; background: #DCE5ED; margin: 0; padding: 24px; color: var(--ink); }
 
         .toolbar { max-width: 794px; margin: 0 auto 14px; display: flex; justify-content: flex-end; gap: 8px; }
         .toolbar button { border: 0; border-radius: 10px; padding: 9px 16px; font: 600 12px 'Jost', sans-serif; cursor: pointer; }
-        .btn-close { background: #fff; color: #334155; border: 1px solid #cbd5e1 !important; }
-        .btn-print { background: var(--orange); color: #fff; }
+        .btn-close { background: #fff; color: #4A5170; border: 1px solid #DCE5ED !important; }
+        .btn-print { background: #26206F; color: #fff; }
 
-        .sheet { position: relative; max-width: 794px; margin: 0 auto; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.10); }
+        .sheet { position: relative; max-width: 794px; margin: 0 auto; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 30px rgba(22,26,53,0.10); }
         .top-bar { height: 8px; background: linear-gradient(90deg, var(--ink) 0 55%, var(--orange) 55% 85%, var(--amber) 85%); }
         .inner { position: relative; padding: 22px 40px 26px; }
 
@@ -158,14 +158,14 @@ $note       = $in('note');
         .tbl thead th:first-child { border-top-left-radius: 10px; }
         .tbl thead th:last-child { border-top-right-radius: 10px; }
         .tbl tbody td { padding: 11px 16px; border-bottom: 1px solid var(--line); background: #fff; }
-        .tbl tbody tr:nth-child(odd) td { background: #fafafa; }
+        .tbl tbody tr:nth-child(odd) td { background: #F6F8FC; }
         .tbl tbody td.strong { font-weight: 600; text-transform: uppercase; }
         .tbl tbody td.num { font-weight: 600; }
 
         .summary { margin-top: 26px; }
 
         .flights { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-        .flight { border: 1px solid #fde3c8; border-radius: 12px; overflow: hidden; }
+        .flight { border: 1px solid #FFE9A8; border-radius: 12px; overflow: hidden; }
         .flight .fh { background: var(--tint); text-align: center; font-weight: 600; font-size: 12.5px; padding: 9px; }
         .flight .fh i { color: var(--orange); margin-right: 6px; }
         .flight .fb { display: flex; justify-content: space-around; align-items: center; padding: 10px 8px; font-size: 13px; }
@@ -175,15 +175,15 @@ $note       = $in('note');
         .divider { height: 2px; background: linear-gradient(90deg, var(--orange), var(--amber), transparent); border: 0; margin: 24px 0 20px; }
 
         .bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
-        .note { background: #fffbeb; border-left: 4px solid var(--orange); border-radius: 8px; padding: 12px 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+        .note { background: #FFFAEB; border-left: 4px solid var(--orange); border-radius: 8px; padding: 12px 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
         .note b { color: var(--ink); }
         .sign { margin-top: 28px; text-align: center; max-width: 240px; }
-        .sign .line { border-top: 1px dashed #cbd5e1; margin-bottom: 14px; }
+        .sign .line { border-top: 1px dashed #DCE5ED; margin-bottom: 14px; }
         .sign .name { font-weight: 700; font-size: 14px; text-transform: uppercase; }
         .sign .role { font-size: 10.5px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 3px; line-height: 1.6; }
 
         .pricing { background: var(--ink); color: #fff; border-radius: 14px; padding: 18px 22px; }
-        .pricing .ph { font-size: 12px; color: #cbd5e1; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+        .pricing .ph { font-size: 12px; color: #DCE5ED; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
         .pricing .pr { display: flex; justify-content: space-between; font-size: 12.5px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.10); }
         .pricing .total { display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--orange); margin-top: 10px; padding-top: 14px; color: var(--amber); font-weight: 800; font-size: 19px; }
 

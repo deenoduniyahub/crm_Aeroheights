@@ -18,7 +18,7 @@ $agent = $data['agent'] ?? null;
 $ledger = $data['ledger'] ?? [];
 
 if (!$agent) {
-    die('<div style="font-family:Arial;padding:30px;text-align:center;color:#b91c1c;">Agent record not found.</div>');
+    die('<div style="font-family:Jost,Arial,sans-serif;padding:30px;text-align:center;color:#E0475B;">Agent record not found.</div>');
 }
 
 $agencyLogo = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_logo'") ?: 'assets/img/logo.png';
@@ -34,15 +34,15 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
     <title>Account Statement — <?= htmlspecialchars($agent['name']) ?> (<?= date('d-M-Y') ?>)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/brand-tailwind.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Jost', 'Inter', sans-serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        body { font-family: 'Jost', Arial, sans-serif; }
+        .font-mono { font-family: 'Jost', Arial, sans-serif; font-variant-numeric: tabular-nums; }
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; padding: 0 !important; font-size: 10.5pt; }
-            .print-border { border: 1px solid #cbd5e1 !important; }
+            .print-border { border: 1px solid #DCE5ED !important; }
         }
     </style>
 </head>
@@ -101,9 +101,9 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                             <td class="p-2 border border-slate-300 font-sans text-slate-600"><?= formatAgentPrintDate($row['arrival_date'] ?? null) ?></td>
                             <td class="p-2 border border-slate-300 font-sans text-slate-600"><?= formatAgentPrintDate($row['departure_date'] ?? null) ?></td>
                             <td class="p-2 border border-slate-300 font-sans font-medium text-slate-900">
-                                <?php if ($isHotel): ?><span style="background:#fde68a;color:#78350f;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;">Hotel</span><?php endif; ?>
-                                <?php if ($isTransport): ?><span style="background:#bae6fd;color:#0c4a6e;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;">Transport</span><?php endif; ?>
-                                <?php if ($isTransport && !empty($row['hotel_names'])): ?><b style="color:#0c4a6e;"><?= htmlspecialchars($row['hotel_names']) ?></b> — <?php endif; ?>
+                                <?php if ($isHotel): ?><span style="background:#FFE9A8;color:#7D5D00;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;">Hotel</span><?php endif; ?>
+                                <?php if ($isTransport): ?><span style="background:#B5D6F6;color:#285A9B;padding:2px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;">Transport</span><?php endif; ?>
+                                <?php if ($isTransport && !empty($row['hotel_names'])): ?><b style="color:#285A9B;"><?= htmlspecialchars($row['hotel_names']) ?></b> — <?php endif; ?>
                                 <?= htmlspecialchars($row['passenger_name']) ?>
                                 <?php if ($isHotel && !empty($row['hotel_names'])): ?><span class="font-sans text-slate-500"> (<?= htmlspecialchars($row['hotel_names']) ?>)</span><?php endif; ?>
                             </td>

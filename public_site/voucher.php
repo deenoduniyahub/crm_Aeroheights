@@ -29,13 +29,14 @@ function publicVoucherNotFound(): void {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap">
     <title>Voucher Not Found — Aeroheights Travels &amp; Tours</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; color: #0f172a; }
-        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 28px 24px; max-width: 420px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+        body { font-family:Jost,Arial,sans-serif; background: #F6F8FC; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; color: #161A35; }
+        .card { background: #fff; border: 1px solid #DCE5ED; border-radius: 14px; padding: 28px 24px; max-width: 420px; text-align: center; box-shadow: 0 10px 25px rgba(22,26,53,0.06); }
         h1 { font-size: 18px; margin: 0 0 8px; color: #26206f; }
-        p { font-size: 14px; color: #475569; margin: 0 0 18px; line-height: 1.5; }
-        a { display: inline-block; background: #2183DF; color: #fff; text-decoration: none; font-weight: 700; padding: 10px 20px; border-radius: 999px; font-size: 14px; }
+        p { font-size: 14px; color: #4A5170; margin: 0 0 18px; line-height: 1.5; }
+        a { display: inline-block; background: linear-gradient(90deg, #FEC624 0%, #FFD95E 100%); color: #161A35; text-decoration: none; font-weight: 700; padding: 10px 20px; border-radius: 999px; font-size: 14px; }
     </style>
 </head>
 <body>

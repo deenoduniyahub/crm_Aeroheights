@@ -117,7 +117,7 @@ $tomorrowTotal = $quickStats['tomorrow']['arrivals'] + $quickStats['tomorrow']['
     </div>
 
     <!-- Aeroheights Office Contacts Card -->
-    <div class="text-white p-4 rounded-2xl shadow-md space-y-3" style="background: linear-gradient(135deg, #26206f 0%, #161a35 100%);">
+    <div class="text-white p-4 rounded-2xl shadow-md space-y-3" style="background-image: linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%);">
         <div class="text-xs font-bold flex items-center text-amber-400">
             <i class="fa-solid fa-headset mr-2"></i> Aeroheights Office
         </div>

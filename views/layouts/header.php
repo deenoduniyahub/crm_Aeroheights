@@ -28,28 +28,23 @@ $currencySymbol = Database::fetchValue("SELECT setting_value FROM system_setting
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
     
-    <!-- Google Fonts: Jost (brand), Inter & Amiri (Urdu) -->
+    <!-- Google Fonts: Jost (brand font everywhere) + Amiri for Urdu text only -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Jost:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Print Stylesheet -->
     <link rel="stylesheet" href="assets/css/print.css">
 
     <style>
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .font-urdu { font-family: 'Amiri', serif; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        /* Brand header: the website's indigo-to-navy band */
-        .brand-header { background: linear-gradient(100deg, #26206f 0%, #1b1d4f 55%, #161a35 100%); }
+        /* Header uses the signature navy gradient (.brand-header in assets/js/brand-tailwind.js) */
         .brand-header .bg-slate-800, .brand-header .bg-slate-800\/80 { background-color: rgba(255,255,255,0.08); }
         .brand-header .border-slate-700, .brand-header .border-slate-700\/60 { border-color: rgba(255,255,255,0.14); }
     </style>
 </head>
-<body class="h-full text-slate-800 antialiased flex flex-col font-sans">
+<body class="h-full text-slate-600 antialiased flex flex-col font-sans">
 
     <!-- Flash Notifications Toast -->
     <?php if ($flash): ?>
@@ -95,7 +90,7 @@ $currencySymbol = Database::fetchValue("SELECT setting_value FROM system_setting
                 <div class="min-w-0">
                     <div class="flex items-center space-x-2">
                         <h1 class="font-black text-lg leading-tight tracking-tight truncate"><?= htmlspecialchars($agencyName) ?></h1>
-                        <span class="inline-flex bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30 uppercase">CRM</span>
+                        <span class="inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full uppercase btn-gold">CRM</span>
                     </div>
                     <p class="text-xs text-slate-400 truncate">Your Trust Is Our Best Reward · Umrah, Visa & Travel CRM</p>
                 </div>

@@ -19,7 +19,7 @@ function fmtDate(?string $date, string $format = 'd/m/Y'): string {
 }
 
 if (!$b) {
-    die('<div style="font-family:Arial;padding:30px;text-align:center;color:#b91c1c;">Hotel booking record not found.</div>');
+    die('<div style="font-family:Jost,Arial,sans-serif;padding:30px;text-align:center;color:#E0475B;">Hotel booking record not found.</div>');
 }
 
 $settings     = AdminController::getSettings();
@@ -41,61 +41,61 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
 <head>
     <meta charset="UTF-8">
     <title><?= h($agencyName) ?> — Hotel Invoice (<?= h($b['booking_ref']) ?>)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', Arial, sans-serif; background: #e2e8f0; margin: 0; padding: 24px; color: #0f172a; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        body { font-family: 'Jost', Arial, sans-serif; background: #DCE5ED; margin: 0; padding: 24px; color: #161A35; }
+        .font-mono { font-family: 'Jost', Arial, sans-serif; font-variant-numeric: tabular-nums; }
 
-        .sheet { max-width: 780px; margin: 0 auto; background: #fff; border: 1px solid #94a3b8; border-radius: 10px; padding: 22px 26px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .sheet { max-width: 780px; margin: 0 auto; background: #fff; border: 1px solid #8A90A8; border-radius: 10px; padding: 22px 26px; box-shadow: 0 10px 25px rgba(22,26,53,0.08); }
 
-        .header-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; border-bottom: 2px solid #0f172a; padding-bottom: 10px; }
-        .company-name { font-size: 16px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.02em; margin: 0; }
-        .header-meta { font-size: 11px; color: #334155; margin-top: 3px; line-height: 1.5; }
+        .header-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; border-bottom: 2px solid #161A35; padding-bottom: 10px; }
+        .company-name { font-size: 16px; font-weight: 800; color: #161A35; text-transform: uppercase; letter-spacing: 0.02em; margin: 0; }
+        .header-meta { font-size: 11px; color: #4A5170; margin-top: 3px; line-height: 1.5; }
         .header-logo { text-align: center; }
         .header-logo img { height: 56px; width: auto; object-fit: contain; }
         .header-right { text-align: right; }
-        .status-tag { display: inline-block; margin-top: 4px; background: #0f172a; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+        .status-tag { display: inline-block; margin-top: 4px; background: #161A35; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
 
         .title-banner { text-align: center; margin: 10px 0 10px; }
-        .title-banner span { display: inline-block; background: #2183DF; color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 26px; border-radius: 999px; }
+        .title-banner span { display: inline-block; background: linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%); color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 26px; border-radius: 999px; }
 
-        .meta-bar { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #777; font-size: 11.5px; font-weight: 700; margin-bottom: 10px; }
-        .meta-bar div { padding: 6px 10px; border-right: 1px solid #777; }
+        .meta-bar { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #8A90A8; font-size: 11.5px; font-weight: 700; margin-bottom: 10px; }
+        .meta-bar div { padding: 6px 10px; border-right: 1px solid #8A90A8; }
         .meta-bar div:nth-child(2n) { border-right: none; }
-        .meta-bar .lbl { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 9.5px; display: block; }
+        .meta-bar .lbl { color: #8A90A8; font-weight: 600; text-transform: uppercase; font-size: 9.5px; display: block; }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        th, td { border: 1px solid #777; padding: 5px 6px; font-size: 11px; }
-        th { background-color: #0f172a; color: #fff; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 9.5px; }
-        td { color: #1e293b; }
+        th, td { border: 1px solid #8A90A8; padding: 5px 6px; font-size: 11px; }
+        th { background-color: #161A35; color: #fff; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 9.5px; }
+        td { color: #161A35; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .font-bold { font-weight: 700; }
 
-        .totals-box { width: 260px; margin-left: auto; border: 1px solid #777; font-size: 11.5px; margin-bottom: 12px; }
-        .totals-box div { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #e2e8f0; }
-        .totals-box div:last-child { border-bottom: none; background: #f1f5f9; font-weight: 800; font-size: 13px; }
+        .totals-box { width: 260px; margin-left: auto; border: 1px solid #8A90A8; font-size: 11.5px; margin-bottom: 12px; }
+        .totals-box div { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #DCE5ED; }
+        .totals-box div:last-child { border-bottom: none; background: #F6F8FC; font-weight: 800; font-size: 13px; }
 
         .bank-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; font-size: 11px; }
-        .bank-section .section-title { background: #d9d9d9; color: #111827; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 8px; border: 1px solid #777; margin-bottom: 6px; }
+        .bank-section .section-title { background: #DCE5ED; color: #161A35; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 8px; border: 1px solid #8A90A8; margin-bottom: 6px; }
         .bank-section p { margin: 2px 0; }
 
-        .remarks { font-size: 10.5px; color: #475569; margin: 10px 0; line-height: 1.5; }
+        .remarks { font-size: 10.5px; color: #4A5170; margin: 10px 0; line-height: 1.5; }
 
-        .print-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; margin-top: 12px; border-top: 1px solid #e2e8f0; }
+        .print-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; margin-top: 12px; border-top: 1px solid #DCE5ED; }
         .print-actions button { font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer; }
-        .btn-close { background: #e2e8f0; color: #334155; }
-        .btn-print { background: #2563eb; color: #fff; }
+        .btn-close { background: #DCE5ED; color: #4A5170; }
+        .btn-print { background: #26206F; color: #fff; }
 
-        .footer-strip { text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; margin-top: 6px; }
+        .footer-strip { text-align: center; font-size: 10px; color: #8A90A8; border-top: 1px solid #DCE5ED; padding-top: 8px; margin-top: 6px; }
 
         @media print {
             @page { size: A4 portrait; margin: 10mm 12mm; }
-            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #000; font-size: 11px; line-height: 1.25; padding: 0; }
+            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #161A35; font-size: 11px; line-height: 1.25; padding: 0; }
             .sheet { max-width: none; border: none; border-radius: 0; box-shadow: none; padding: 0; }
             .no-print { display: none !important; }
-            th { background-color: #0f172a !important; color: #fff !important; }
+            th { background-color: #161A35 !important; color: #fff !important; }
         }
     </style>
 </head>
@@ -157,10 +157,10 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right font-bold" style="background:#f1f5f9;">Total Nights</td>
-                    <td class="text-center font-bold" style="background:#f1f5f9;"><?= (int)$b['total_nights'] ?></td>
-                    <td colspan="3" style="background:#f1f5f9;"></td>
-                    <td class="text-right font-bold" style="background:#f1f5f9;"><?= number_format((float)$b['sell_total_sar'], 2) ?></td>
+                    <td colspan="4" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
+                    <td class="text-center font-bold" style="background:#F6F8FC;"><?= (int)$b['total_nights'] ?></td>
+                    <td colspan="3" style="background:#F6F8FC;"></td>
+                    <td class="text-right font-bold" style="background:#F6F8FC;"><?= number_format((float)$b['sell_total_sar'], 2) ?></td>
                 </tr>
             </tfoot>
         </table>

@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../controllers/OperationsController.php';
 /** WhatsApp "Send" button: one link for Makkah/Madinah, or a small chooser when the city is unknown. */
 function renderWhatsAppSend(array $links): string {
     if (!$links) return '';
-    $btn = 'inline-flex items-center gap-1 bg-[#25D366] hover:bg-[#1ebe5a] text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm transition whitespace-nowrap';
+    $btn = 'inline-flex items-center gap-1 btn-whatsapp hover:opacity-90 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm transition whitespace-nowrap';
     if (count($links) === 1) {
         $l = $links[0];
         return '<a href="' . htmlspecialchars($l['url']) . '" target="_blank" rel="noopener" class="' . $btn . ' no-print" title="Send to ' . htmlspecialchars($l['team'] . ' team (' . $l['number'] . ')') . ' on WhatsApp"><i class="fa-brands fa-whatsapp text-xs"></i> Send ' . htmlspecialchars($l['team']) . '</a>';

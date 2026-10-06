@@ -35,12 +35,15 @@ $loginError     = $_GET['error'] ?? '';
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Jost', ui-sans-serif, system-ui, sans-serif; background: radial-gradient(1200px 600px at 10% -10%, #2183DF33 0%, transparent 60%), linear-gradient(135deg, #26206f 0%, #1b1d4f 50%, #161a35 100%); }
-        .field { width: 100%; border: 1px solid #dce5ed; border-radius: 0.75rem; padding: 0.65rem 0.9rem 0.65rem 2.5rem; font-size: 0.875rem; outline: none; background: #f6f8fc; transition: border-color .15s, box-shadow .15s, background .15s; }
+        body { font-family: 'Jost', ui-sans-serif, system-ui, sans-serif; color: #4A5170; background: radial-gradient(900px 500px at 12% -8%, rgba(55, 212, 217, .22) 0%, transparent 60%), linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%); background-attachment: fixed; }
+        .field { width: 100%; color: #161A35; border: 1px solid #DCE5ED; border-radius: 0.75rem; padding: 0.65rem 0.9rem 0.65rem 2.5rem; font-size: 0.875rem; outline: none; background: #F6F8FC; transition: border-color .15s, box-shadow .15s, background .15s; }
         .field:focus { border-color: #2183DF; box-shadow: 0 0 0 3px #2183DF33; background: #fff; }
-        .field-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #8e9ab6; font-size: 0.85rem; }
-        .btn-primary { width: 100%; background: #2183DF; color: #fff; font-weight: 700; padding: 0.7rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background .15s; }
-        .btn-primary:hover { background: #26206f; }
+        .field-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #8A90A8; font-size: 0.85rem; }
+        .btn-primary { width: 100%; background: linear-gradient(90deg, #FEC624 0%, #FFD95E 100%); color: #161A35; font-weight: 700; padding: 0.7rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; transition: filter .15s, box-shadow .15s; box-shadow: 0 6px 18px rgba(254, 198, 36, .28); }
+        .btn-primary:hover { filter: brightness(1.04); box-shadow: 0 8px 22px rgba(254, 198, 36, .38); }
+        .eyebrow { color: #37D4D9; }
+        .msg-error { background: #FDF0F2; color: #E0475B; border-color: #F6BAC2; }
+        .msg-ok { background: #EDF8FA; color: #2F6A7B; border-color: #A9E3EA; }
         .btn-primary:disabled { opacity: .7; cursor: wait; }
     </style>
 </head>
@@ -49,10 +52,10 @@ $loginError     = $_GET['error'] ?? '';
     <div class="w-full max-w-sm">
         <div class="flex flex-col items-center mb-6">
             <img src="assets/img/logo-dark.png" alt="<?= htmlspecialchars($agencyName) ?>" class="h-20 w-auto object-contain mb-3" onerror="this.outerHTML='<div class=\'text-white font-black text-2xl\'>AEROHEIGHTS</div>';">
-            <p class="text-blue-200 text-xs tracking-widest uppercase font-semibold">Travel CRM &middot; Secure Team Login</p>
+            <p class="eyebrow text-xs tracking-widest uppercase font-semibold">Travel CRM &middot; Secure Team Login</p>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-7 border-t-4 border-blue-600">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-7 border-t-4" style="border-top-color: #FEC624;">
             <div id="msgBox" class="hidden mb-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-start">
                 <i id="msgIcon" class="fa-solid fa-triangle-exclamation mr-2 mt-0.5"></i>
                 <span id="msgText"></span>
@@ -128,7 +131,7 @@ $loginError     = $_GET['error'] ?? '';
             </form>
         </div>
 
-        <p class="text-center text-blue-200/70 text-[11px] mt-5">
+        <p class="text-center text-[11px] mt-5" style="color: #8A90A8;">
             <i class="fa-solid fa-shield-halved mr-1"></i> Authorized team members only &middot;
             <a href="https://aeroheightstravels.com/" class="hover:text-white">aeroheightstravels.com</a>
         </p>
@@ -148,7 +151,7 @@ $loginError     = $_GET['error'] ?? '';
 
         function showMessage(message, ok) {
             const box = document.getElementById('msgBox');
-            box.className = 'mb-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-start border ' + (ok ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200');
+            box.className = 'mb-4 rounded-xl px-4 py-2.5 text-xs font-semibold flex items-start border ' + (ok ? 'msg-ok' : 'msg-error');
             document.getElementById('msgIcon').className = 'fa-solid mr-2 mt-0.5 ' + (ok ? 'fa-circle-check' : 'fa-triangle-exclamation');
             document.getElementById('msgText').textContent = message;
         }

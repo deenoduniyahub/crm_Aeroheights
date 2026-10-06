@@ -64,7 +64,7 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
             <h3 class="text-2xl font-black text-rose-600 mt-2 font-mono"><?= $money($t['sar']['buy']) ?> <span class="text-xs font-normal text-slate-400">SAR</span></h3>
             <div class="mt-1 text-[11px] text-slate-500">Cost from vendors / suppliers</div>
         </div>
-        <div class="p-5 rounded-2xl shadow-sm text-white" style="background: linear-gradient(135deg, #26206f 0%, #2183DF 100%);">
+        <div class="p-5 rounded-2xl shadow-sm text-white" style="background-image: linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%);">
             <div class="flex items-center justify-between">
                 <span class="text-[11px] font-bold text-blue-100 uppercase tracking-wider">Profit</span>
                 <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-trend-up"></i></div>

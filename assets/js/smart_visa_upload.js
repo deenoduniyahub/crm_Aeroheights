@@ -52,7 +52,7 @@
         </div>
         <style>
           .sv-pop{animation:svPop .25s ease-out}@keyframes svPop{from{transform:translateY(12px) scale(.98);opacity:0}to{transform:none;opacity:1}}
-          .sv-shimmer{background:linear-gradient(90deg,#10b981,#06b6d4,#14b8a6,#10b981);background-size:300% 100%;animation:svShim 2s linear infinite}@keyframes svShim{to{background-position:-300% 0}}
+          .sv-shimmer{background:linear-gradient(90deg,#4C9AAF,#37D4D9,#4C9AAF,#4C9AAF);background-size:300% 100%;animation:svShim 2s linear infinite}@keyframes svShim{to{background-position:-300% 0}}
           .sv-burst{animation:svBurst .6s ease-out}@keyframes svBurst{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
           .sv-row{transition:all .15s}.sv-row.sv-off{opacity:.5;filter:grayscale(.5)}
         </style>`;

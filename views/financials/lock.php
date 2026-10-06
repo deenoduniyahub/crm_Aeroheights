@@ -33,8 +33,8 @@ $lockTitles = [
                 <input type="password" id="unlock_password" autocomplete="current-password" required placeholder="Password"
                        class="w-full border border-slate-300 rounded-xl py-2.5 pl-10 pr-3.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
             </div>
-            <button type="submit" id="unlockBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-3.5 rounded-xl transition shadow-md">
-                <i class="fa-solid fa-lock-open mr-1.5 text-amber-400"></i> Unlock
+            <button type="submit" id="unlockBtn" class="w-full btn-gold font-bold text-xs py-3.5 rounded-xl transition shadow-md">
+                <i class="fa-solid fa-lock-open mr-1.5"></i> Unlock
             </button>
         </form>
         <a href="index.php?page=profile" class="inline-block text-[11px] font-semibold text-blue-600 hover:underline">Forgot the password? Reset it with an email code</a>

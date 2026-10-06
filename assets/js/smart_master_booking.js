@@ -54,9 +54,9 @@
         </div>
         <style>
           .sm-pop{animation:smPop .25s ease-out}@keyframes smPop{from{transform:translateY(12px) scale(.98);opacity:0}to{transform:none;opacity:1}}
-          .sm-shimmer{background:linear-gradient(90deg,#8b5cf6,#d946ef,#6366f1,#8b5cf6);background-size:300% 100%;animation:smShim 2s linear infinite}@keyframes smShim{to{background-position:-300% 0}}
-          .sm-in{border:1px solid #e2e8f0;border-radius:.6rem;padding:.35rem .5rem;font-size:12px;width:100%;background:#fff}
-          .sm-in:focus{outline:none;box-shadow:0 0 0 2px #a78bfa;border-color:#a78bfa}
+          .sm-shimmer{background:linear-gradient(90deg,#26206F,#26206F,#26206F,#26206F);background-size:300% 100%;animation:smShim 2s linear infinite}@keyframes smShim{to{background-position:-300% 0}}
+          .sm-in{border:1px solid #DCE5ED;border-radius:.6rem;padding:.35rem .5rem;font-size:12px;width:100%;background:#fff}
+          .sm-in:focus{outline:none;box-shadow:0 0 0 2px #8F89CA;border-color:#8F89CA}
           .sm-card{transition:all .15s}.sm-card.sm-off{opacity:.45;filter:grayscale(.6)}
           .sm-burst{animation:smBurst .6s ease-out}@keyframes smBurst{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
         </style>`;

@@ -19,7 +19,7 @@ function fmtDate(?string $date, string $format = 'd/m/Y'): string {
 }
 
 if (!$b) {
-    die('<div style="font-family:Arial;padding:30px;text-align:center;color:#b91c1c;">Hotel booking record not found.</div>');
+    die('<div style="font-family:Jost,Arial,sans-serif;padding:30px;text-align:center;color:#E0475B;">Hotel booking record not found.</div>');
 }
 
 $settings     = AdminController::getSettings();
@@ -61,17 +61,17 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
 <head>
     <meta charset="UTF-8">
     <title><?= h($companyName) ?> — Hotel Sale Voucher (<?= h($b['booking_ref']) ?>)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', Arial, sans-serif; background: #e2e8f0; margin: 0; padding: 24px; color: #0f172a; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        body { font-family: 'Jost', Arial, sans-serif; background: #DCE5ED; margin: 0; padding: 24px; color: #161A35; }
+        .font-mono { font-family: 'Jost', Arial, sans-serif; font-variant-numeric: tabular-nums; }
 
-        .sheet { max-width: 780px; margin: 0 auto; background: #fff; border: 1px solid #94a3b8; border-radius: 10px; padding: 22px 26px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        .sheet { max-width: 780px; margin: 0 auto; background: #fff; border: 1px solid #8A90A8; border-radius: 10px; padding: 22px 26px; box-shadow: 0 10px 25px rgba(22,26,53,0.08); }
 
-        .header-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; border-bottom: 2px solid #0f172a; padding-bottom: 10px; }
-        .company-name { font-size: 16px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.02em; margin: 0; }
-        .header-meta { font-size: 11px; color: #334155; margin-top: 3px; line-height: 1.5; }
+        .header-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; border-bottom: 2px solid #161A35; padding-bottom: 10px; }
+        .company-name { font-size: 16px; font-weight: 800; color: #161A35; text-transform: uppercase; letter-spacing: 0.02em; margin: 0; }
+        .header-meta { font-size: 11px; color: #4A5170; margin-top: 3px; line-height: 1.5; }
         .header-logo { text-align: center; }
         .header-logo img { height: 56px; width: auto; object-fit: contain; }
         .header-right { text-align: right; }
@@ -88,17 +88,17 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
         /* Mini logo badge on the right when another agency's name is printed */
         /* Header QR (scan -> verified copy of this voucher on aeroheightstravels.com) */
         .wa-qr-box { display: inline-flex; flex-direction: column; align-items: center; gap: 3px; }
-        .wa-qr { background: #fff; padding: 4px; border: 1px solid #cbd5e1; border-radius: 8px; line-height: 0; }
+        .wa-qr { background: #fff; padding: 4px; border: 1px solid #DCE5ED; border-radius: 8px; line-height: 0; }
         .wa-qr svg { display: block; width: 100%; height: 100%; }
         .wa-qr-big .wa-qr { width: 86px; height: 86px; }
         .wa-qr-small .wa-qr { width: 54px; height: 54px; }
-        .wa-qr-caption { font-size: 8.5px; font-weight: 800; color: #15803d; letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; }
+        .wa-qr-caption { font-size: 8.5px; font-weight: 800; color: #3B8296; letter-spacing: 0.03em; text-transform: uppercase; white-space: nowrap; }
         .wa-qr-small .wa-qr-caption { font-size: 7.5px; }
         .header-right-row { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
         /* Public (website) view: verified bar + link back to the main website */
         .public-bar { max-width: 820px; margin: 0 auto 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; }
         .public-bar a { color: #26206f; text-decoration: none; background: #fff; border: 1px solid #b5d6f6; padding: 7px 14px; border-radius: 999px; }
-        .public-bar .verified { color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 7px 14px; border-radius: 999px; }
+        .public-bar .verified { color: #3B8296; background: #EDF8FA; border: 1px solid #A9E3EA; padding: 7px 14px; border-radius: 999px; }
         .mini-logo {
             display: inline-flex; align-items: center; justify-content: center;
             padding: 4px 8px; margin-bottom: 4px; background: #fff;
@@ -118,60 +118,60 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
         /* Attractive header: soft cream band with an orange/navy accent line; partner logo shown clean and large (no box) */
         .header-grid {
             position: relative; align-items: center;
-            background: linear-gradient(115deg, #eaf3fc 0%, #ffffff 38%, #ffffff 62%, #eaf3fc 100%);
+            background: linear-gradient(115deg, #EEF6FD 0%, #ffffff 38%, #ffffff 62%, #EEF6FD 100%);
             border: none; border-radius: 14px;
-            box-shadow: inset 0 0 0 1px #cfe3f8;
+            box-shadow: inset 0 0 0 1px #D9EAFB;
             padding: 14px 18px; margin-bottom: 6px;
         }
         .header-grid::after {
             content: ''; position: absolute; left: 18px; right: 18px; bottom: -2px; height: 3px; border-radius: 3px;
-            background: linear-gradient(90deg, #2183DF 0%, #0f172a 50%, #2183DF 100%);
+            background: linear-gradient(90deg, #FEC624 0%, #26206F 30%, #285A9B 70%, #FEC624 100%);
         }
         .company-name.agency-big { color: #26206f; text-shadow: 0 1px 0 #fff, 0 2px 6px rgba(33, 131, 223, 0.18); }
         .mini-logo { padding: 0; margin-bottom: 4px; background: none; border: none; border-radius: 0; box-shadow: none; }
-        .mini-logo img { height: 74px; filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.12)); }
+        .mini-logo img { height: 74px; filter: drop-shadow(0 2px 3px rgba(22, 26, 53, 0.12)); }
         .header-logo img { mix-blend-mode: multiply; } /* blend the white JPG background into the header band */
 
-        .status-tag { display: inline-block; margin-top: 4px; background: #0f766e; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+        .status-tag { display: inline-block; margin-top: 4px; background: #3B8296; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
 
         .title-banner { text-align: center; margin: 10px 0 10px; }
-        .title-banner span { display: inline-block; background: #2183DF; color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 26px; border-radius: 999px; }
+        .title-banner span { display: inline-block; background: linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%); color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 26px; border-radius: 999px; }
 
-        .meta-bar { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #777; font-size: 11.5px; font-weight: 700; margin-bottom: 10px; }
-        .meta-bar div { padding: 6px 10px; border-right: 1px solid #777; }
+        .meta-bar { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #8A90A8; font-size: 11.5px; font-weight: 700; margin-bottom: 10px; }
+        .meta-bar div { padding: 6px 10px; border-right: 1px solid #8A90A8; }
         .meta-bar div:nth-child(2n) { border-right: none; }
-        .meta-bar .lbl { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 9.5px; display: block; }
+        .meta-bar .lbl { color: #8A90A8; font-weight: 600; text-transform: uppercase; font-size: 9.5px; display: block; }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        th, td { border: 1px solid #777; padding: 5px 6px; font-size: 11px; }
-        th { background-color: #d9d9d9; color: #111827; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 9.5px; }
-        td { color: #1e293b; }
+        th, td { border: 1px solid #8A90A8; padding: 5px 6px; font-size: 11px; }
+        th { background-color: #DCE5ED; color: #161A35; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 9.5px; }
+        td { color: #161A35; }
         .text-center { text-align: center; }
         .font-bold { font-weight: 700; }
 
-        .section-title { background: #d9d9d9; color: #111827; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; padding: 4px 6px; border: 1px solid #777; }
+        .section-title { background: #DCE5ED; color: #161A35; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; text-align: center; padding: 4px 6px; border: 1px solid #8A90A8; }
 
-        .remarks-box { border: 1px solid #777; padding: 10px 12px; font-size: 11px; margin: 10px 0; line-height: 1.6; }
+        .remarks-box { border: 1px solid #8A90A8; padding: 10px 12px; font-size: 11px; margin: 10px 0; line-height: 1.6; }
         .remarks-box ul { margin: 4px 0 0; padding-left: 18px; }
 
-        .helpline-bar { display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 800; margin: 10px 0 14px; border: 1px solid #777; }
+        .helpline-bar { display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 800; margin: 10px 0 14px; border: 1px solid #8A90A8; }
         .helpline-bar div { padding: 6px 10px; }
-        .helpline-bar div:first-child { border-right: 1px solid #777; }
+        .helpline-bar div:first-child { border-right: 1px solid #8A90A8; }
 
-        .footer-strip { text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid #cbd5e1; padding-top: 8px; margin-top: 6px; }
+        .footer-strip { text-align: center; font-size: 10px; color: #8A90A8; border-top: 1px solid #DCE5ED; padding-top: 8px; margin-top: 6px; }
 
-        .print-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; margin-top: 12px; border-top: 1px solid #e2e8f0; }
+        .print-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 16px; margin-top: 12px; border-top: 1px solid #DCE5ED; }
         .print-actions button { font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer; }
-        .btn-close { background: #e2e8f0; color: #334155; }
-        .btn-print { background: #2563eb; color: #fff; }
+        .btn-close { background: #DCE5ED; color: #4A5170; }
+        .btn-print { background: #26206F; color: #fff; }
 
         @media print {
             @page { size: A4 portrait; margin: 10mm 12mm; }
-            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #000; font-size: 11px; line-height: 1.25; padding: 0; }
+            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #161A35; font-size: 11px; line-height: 1.25; padding: 0; }
             .sheet { max-width: none; border: none; border-radius: 0; box-shadow: none; padding: 0; }
             .no-print { display: none !important; }
-            th { background-color: #d9d9d9 !important; color: #111827 !important; }
-            .section-title { background: #d9d9d9 !important; color: #111827 !important; }
+            th { background-color: #DCE5ED !important; color: #161A35 !important; }
+            .section-title { background: #DCE5ED !important; color: #161A35 !important; }
         }
     </style>
 </head>
@@ -261,9 +261,9 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right font-bold" style="background:#f1f5f9;">Total Nights</td>
-                    <td class="text-center font-bold" style="background:#f1f5f9;"><?= (int)$b['total_nights'] ?></td>
-                    <td colspan="3" style="background:#f1f5f9;"></td>
+                    <td colspan="4" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
+                    <td class="text-center font-bold" style="background:#F6F8FC;"><?= (int)$b['total_nights'] ?></td>
+                    <td colspan="3" style="background:#F6F8FC;"></td>
                 </tr>
             </tfoot>
         </table>

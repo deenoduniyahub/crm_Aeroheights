@@ -47,7 +47,7 @@ class Database {
                         'message' => 'Database connection failed: ' . $e->getMessage()
                     ]);
                 } else {
-                    die('<div style="font-family:Arial,sans-serif;padding:20px;color:#b91c1c;background:#fee2e2;border:1px solid #f87171;border-radius:8px;">' .
+                    die('<div style="font-family:Jost,Arial,sans-serif;padding:20px;color:#E0475B;background:#FDF0F2;border:1px solid #E0475B;border-radius:8px;">' .
                         '<h3 style="margin-top:0;">Database Connection Error</h3>' .
                         '<p>' . htmlspecialchars($e->getMessage()) . '</p>' .
                         '</div>');
