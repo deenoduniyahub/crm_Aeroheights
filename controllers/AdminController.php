@@ -135,15 +135,15 @@ class AdminController {
     public static function updateSettings(array $settings): array {
         Database::beginTransaction();
         try {
+            // Each placeholder used once: native prepares (EMULATE_PREPARES off) reject a repeated named parameter.
             $stmt = Database::getConnection()->prepare(
-                "INSERT INTO system_settings (setting_key, setting_value) 
-                 VALUES (:key, :value) 
-                 ON DUPLICATE KEY UPDATE setting_value = :value"
+                "INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)"
             );
 
             foreach ($settings as $key => $val) {
                 if (in_array($key, ['financial_pin', 'raw_financial_pin'], true)) continue; // replaced by the owner email + password lock
-                $stmt->execute([':key' => (string)$key, ':value' => (string)$val]);
+                $stmt->execute([(string)$key, (string)$val]);
             }
 
             Database::commit();
