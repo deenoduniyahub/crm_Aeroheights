@@ -38,8 +38,8 @@ $showLogo     = ($companyName === 'Aeroheights Travels & Tours');
 // Header QR -> signed read-only copy of this voucher on the main website (see VoucherShare).
 $isPublicView = defined('AST_PUBLIC_VOUCHER');
 $qrUrl = VoucherShare::url('b', $bookingId);
-// Other agencies' vouchers carry the AST partner logo (transparent PNG) in the badge + watermark.
-$brandLogo = $showLogo ? $agencyLogo : 'assets/img/logo.png';
+// Other agencies' vouchers carry our emblem only (assets/img/logo-partner.png) in the badge + watermark.
+$brandLogo = $showLogo ? $agencyLogo : 'assets/img/logo-partner.png';
 if ($isPublicView) {
     // Embed the logos so the public page never references the software's paths.
     $embedLogo = static function (string $path): string {
