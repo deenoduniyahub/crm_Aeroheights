@@ -22,7 +22,6 @@ if (!$agent) {
 }
 
 $agencyLogo = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_logo'") ?: 'assets/img/logo.png';
-$agencyName = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_name'") ?: 'Aeroheights Travels & Tours';
 $agencyPhone = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_phone'") ?: '+92 303 5137777';
 $bankDetails = array_values(array_filter(array_map('trim', explode("
 ", (string)(Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'bank_details'") ?: '')))));
@@ -51,14 +50,10 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
     <div class="max-w-4xl mx-auto bg-white border border-slate-300 p-8 rounded-2xl shadow-xl space-y-6 print-border">
         
         <!-- Header with Agency Logo -->
-        <div class="flex justify-between items-center border-b-2 border-slate-900 pb-4">
-            <div class="flex items-center space-x-4">
+        <div class="flex justify-between items-start border-b-2 border-slate-900 pb-4">
+            <div class="flex flex-col items-start gap-1.5">
                 <img src="<?= htmlspecialchars($agencyLogo) ?>" alt="Agency Logo" class="h-14 w-auto object-contain" onerror="this.style.display='none'">
-                <div>
-                    <h1 class="text-xl font-black text-slate-900 uppercase tracking-tight"><?= htmlspecialchars($agencyName) ?></h1>
-                    <p class="text-xs text-slate-500 font-bold tracking-wide">Umrah & Travel Services — Client Account Statement</p>
-                    <p class="text-[11px] text-slate-600 mt-1"><strong>Phone / WhatsApp:</strong> <?= htmlspecialchars($agencyPhone) ?></p>
-                </div>
+                <p class="text-[11px] text-slate-600"><strong>Phone / WhatsApp:</strong> <?= htmlspecialchars($agencyPhone) ?></p>
             </div>
             <div class="text-right">
                 <span class="text-lg font-black text-rose-600 uppercase tracking-wider block">Statement of Account</span>

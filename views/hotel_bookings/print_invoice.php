@@ -90,12 +90,56 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
 
         .footer-strip { text-align: center; font-size: 10px; color: #8A90A8; border-top: 1px solid #DCE5ED; padding-top: 8px; margin-top: 6px; }
 
+        .sheet { max-width: 1040px; border: 1px solid #e2e8f0; border-radius: 18px; padding: 30px; box-shadow: 0 18px 50px rgba(22,26,53,0.12); }
+        .header-grid { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 20px; align-items: center; border: 0; border-radius: 16px; padding: 18px 22px; margin-bottom: 16px; background: linear-gradient(120deg,#f3f7ff 0%,#fff 48%,#f7f9ff 100%); box-shadow: inset 0 0 0 1px #e1e8f5; }
+        .company-name { color: #202754; font-size: 17px; letter-spacing: .035em; }
+        .header-meta { color: #64748b; line-height: 1.6; }
+        .header-logo img { height: 66px; }
+        .status-tag { background: #3b8296; padding: 5px 11px; }
+        .title-banner { margin: 18px 0 14px; }
+        .title-banner span { padding: 8px 30px; font-size: 13px; letter-spacing: .09em; box-shadow: 0 5px 14px rgba(38,32,111,.18); }
+        .meta-bar { gap: 1px; padding: 1px; border: 0; border-radius: 13px; overflow: hidden; background: #e2e8f0; margin-bottom: 16px; }
+        .meta-bar div { min-height: 56px; padding: 10px 13px; background: #fff; border: 0; }
+        .meta-bar .lbl { color: #94a3b8; font-size: 9px; letter-spacing: .07em; margin-bottom: 3px; }
+        .table-wrap { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; }
+        table { margin: 0; }
+        th, td { border: 0; border-bottom: 1px solid #e8edf4; padding: 10px 8px; font-size: 10.5px; }
+        th { background: #202754; color: #fff; font-size: 9px; letter-spacing: .055em; line-height: 1.35; }
+        tbody tr:nth-child(even) { background: #f8fafc; }
+        tbody tr:last-child td { border-bottom: 0; }
+        tfoot td { border-top: 1px solid #dbe3ee; border-bottom: 0; color: #27345b; padding: 10px 8px; }
+        .totals-box { width: min(100%, 340px); border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin: 4px 0 16px auto; }
+        .totals-box div { padding: 9px 13px; }
+        .totals-box div:last-child { background: #f1f5ff; color: #202754; font-size: 13px; }
+        .bank-section { gap: 14px; margin: 16px 0; }
+        .bank-section > div { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding: 0 12px 10px; background: #fff; }
+        .bank-section .section-title { background: #f1f5f9; color: #202754; border: 0; border-bottom: 1px solid #e2e8f0; margin: 0 -12px 9px; padding: 9px 12px; letter-spacing: .07em; }
+        .bank-section p { line-height: 1.55; color: #475569; }
+        .remarks { border: 1px solid #e2e8f0; border-left: 4px solid #f2b827; border-radius: 10px; background: #fffcf3; padding: 10px 14px; color: #475569; }
+        .footer-strip { color: #64748b; padding-top: 12px; margin-top: 12px; line-height: 1.6; }
+        .print-actions { padding-top: 12px; }
+        .btn-close, .btn-print { padding: 10px 20px !important; border-radius: 9px !important; }
+        @media screen and (max-width: 700px) {
+            body { padding: 10px; }
+            .sheet { padding: 16px; border-radius: 14px; }
+            .header-grid { grid-template-columns: minmax(0,1fr) auto; gap: 10px; padding: 14px; }
+            .header-logo { grid-column: 2; grid-row: 1; }
+            .header-right { grid-column: 1 / -1; text-align: left; }
+            .meta-bar { grid-template-columns: 1fr; }
+            .meta-bar div { border-bottom: 1px solid #e2e8f0; }
+            .meta-bar div:last-child { border-bottom: 0; }
+            .bank-section { grid-template-columns: 1fr; }
+        }
+
         @media print {
             @page { size: A4 portrait; margin: 10mm 12mm; }
             body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #161A35; font-size: 11px; line-height: 1.25; padding: 0; }
             .sheet { max-width: none; border: none; border-radius: 0; box-shadow: none; padding: 0; }
+            .header-grid { break-inside: avoid; }
+            .table-wrap { overflow: visible; break-inside: auto; }
+            tr { break-inside: avoid; }
             .no-print { display: none !important; }
-            th { background-color: #161A35 !important; color: #fff !important; }
+            th { background-color: #202754 !important; color: #fff !important; }
         }
     </style>
 </head>
@@ -126,6 +170,7 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
             <div><span class="lbl">Total PAX</span><?= $totalPax ?> (<?= h($paxSummary) ?>)</div>
         </div>
 
+        <div class="table-wrap">
         <table>
             <thead>
                 <tr>
@@ -133,8 +178,8 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
                     <th>Hotel Name</th>
                     <th>Room Type</th>
                     <th>Checkin</th>
-                    <th style="width:44px;">Nights</th>
                     <th>Checkout</th>
+                    <th style="width:44px;">Nights</th>
                     <th>Meal Plan</th>
                     <th class="text-right">Rate/Night (SAR)</th>
                     <th class="text-right">Amount (SAR)</th>
@@ -147,8 +192,8 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
                     <td class="font-bold"><?= h($s['hotel_name']) ?> <span class="text-slate-400">(<?= h($s['city']) ?>)</span></td>
                     <td class="text-center"><?= h($s['room_type']) ?></td>
                     <td class="font-mono text-center"><?= h(fmtDate($s['checkin_date'])) ?></td>
-                    <td class="text-center font-bold"><?= (int)$s['nights'] ?></td>
                     <td class="font-mono text-center"><?= h(fmtDate($s['checkout_date'])) ?></td>
+                    <td class="text-center font-bold"><?= (int)$s['nights'] ?></td>
                     <td class="text-center"><?= h($s['meal_plan']) ?></td>
                     <td class="text-right font-mono"><?= number_format((float)$s['sell_rate_per_night'], 2) ?></td>
                     <td class="text-right font-mono font-bold"><?= number_format((float)$s['sell_total'], 2) ?></td>
@@ -157,13 +202,14 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
+                    <td colspan="5" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
                     <td class="text-center font-bold" style="background:#F6F8FC;"><?= (int)$b['total_nights'] ?></td>
-                    <td colspan="3" style="background:#F6F8FC;"></td>
+                    <td colspan="2" style="background:#F6F8FC;"></td>
                     <td class="text-right font-bold" style="background:#F6F8FC;"><?= number_format((float)$b['sell_total_sar'], 2) ?></td>
                 </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="totals-box">
             <div><span>Net Accommodation Charges</span><span class="font-mono">SAR <?= number_format((float)$b['sell_total_sar'], 2) ?></span></div>

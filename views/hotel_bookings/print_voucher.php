@@ -165,13 +165,55 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
         .btn-close { background: #DCE5ED; color: #4A5170; }
         .btn-print { background: #26206F; color: #fff; }
 
+        .sheet { max-width: 1040px; border: 1px solid #e2e8f0; border-radius: 18px; padding: 30px; box-shadow: 0 18px 50px rgba(22,26,53,0.12); }
+        .header-grid { grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 20px; padding: 18px 22px; margin-bottom: 16px; border-radius: 16px; background: linear-gradient(120deg,#f3f7ff 0%,#fff 48%,#f7f9ff 100%); box-shadow: inset 0 0 0 1px #e1e8f5; }
+        .header-grid::after { left: 22px; right: 22px; }
+        .company-name { font-size: 17px; letter-spacing: .035em; }
+        .header-meta { color: #64748b; line-height: 1.6; }
+        .header-logo img { height: 66px; }
+        .mini-logo img { height: 66px; }
+        .title-banner { margin: 18px 0 14px; }
+        .title-banner span { padding: 8px 30px; font-size: 13px; letter-spacing: .09em; box-shadow: 0 5px 14px rgba(38,32,111,.18); }
+        .meta-bar { gap: 1px; padding: 1px; border: 0; border-radius: 13px; overflow: hidden; background: #e2e8f0; margin-bottom: 16px; }
+        .meta-bar div { min-height: 56px; padding: 10px 13px; background: #fff; border: 0; }
+        .meta-bar .lbl { color: #94a3b8; font-size: 9px; letter-spacing: .07em; margin-bottom: 3px; }
+        .table-wrap { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; }
+        table { margin: 0; }
+        th, td { border: 0; border-bottom: 1px solid #e8edf4; padding: 10px 8px; font-size: 10.5px; }
+        th { background: #202754; color: #fff; font-size: 9px; letter-spacing: .055em; line-height: 1.35; }
+        tbody tr:nth-child(even) { background: #f8fafc; }
+        tbody tr:last-child td { border-bottom: 0; }
+        tfoot td { border-top: 1px solid #dbe3ee; border-bottom: 0; color: #27345b; padding: 10px 8px; }
+        .remarks-box { border: 1px solid #e2e8f0; border-left: 4px solid #f2b827; border-radius: 12px; background: #fffcf3; padding: 12px 16px; margin: 15px 0; color: #475569; }
+        .remarks-box strong { color: #202754; }
+        .section-title { background: #f1f5f9; color: #202754; border: 1px solid #e2e8f0; border-radius: 10px 10px 0 0; padding: 8px; letter-spacing: .08em; }
+        .helpline-bar { border: 1px solid #e2e8f0; border-top: 0; border-radius: 0 0 10px 10px; background: #f8fafc; color: #334155; margin: 0 0 15px; }
+        .helpline-bar div { padding: 9px 12px; }
+        .helpline-bar div:first-child { border-right: 1px solid #e2e8f0; }
+        .footer-strip { color: #64748b; padding-top: 12px; margin-top: 12px; line-height: 1.6; }
+        .print-actions { padding-top: 12px; }
+        .btn-close, .btn-print { padding: 10px 20px !important; border-radius: 9px !important; }
+        @media screen and (max-width: 700px) {
+            body { padding: 10px; }
+            .sheet { padding: 16px; border-radius: 14px; }
+            .header-grid { grid-template-columns: minmax(0,1fr) auto; gap: 10px; padding: 14px; }
+            .header-logo { grid-column: 2; grid-row: 1; }
+            .header-right { grid-column: 1 / -1; text-align: left; }
+            .header-right-row { justify-content: flex-start; }
+            .company-name.agency-big { font-size: 20px; }
+            .public-bar { font-size: 10px; }
+        }
+
         @media print {
             @page { size: A4 portrait; margin: 10mm 12mm; }
-            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #161A35; font-size: 11px; line-height: 1.25; padding: 0; }
+            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: #fff !important; color: #161A35; font-size: 10px; line-height: 1.25; padding: 0; }
             .sheet { max-width: none; border: none; border-radius: 0; box-shadow: none; padding: 0; }
+            .header-grid { break-inside: avoid; }
+            .table-wrap { overflow: visible; break-inside: auto; }
+            tr { break-inside: avoid; }
             .no-print { display: none !important; }
-            th { background-color: #DCE5ED !important; color: #161A35 !important; }
-            .section-title { background: #DCE5ED !important; color: #161A35 !important; }
+            th { background-color: #202754 !important; color: #fff !important; }
+            .section-title { background: #f1f5f9 !important; color: #202754 !important; }
         }
     </style>
 </head>
@@ -230,6 +272,7 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
             <div><span class="lbl">Total PAX</span><?= $totalPax ?> (<?= h($paxSummary) ?>)</div>
         </div>
 
+        <div class="table-wrap">
         <table>
             <thead>
                 <tr>
@@ -238,8 +281,8 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
                     <th>City</th>
                     <th>Room Type</th>
                     <th>Checkin</th>
-                    <th style="width:44px;">Nights</th>
                     <th>Checkout</th>
+                    <th style="width:44px;">Nights</th>
                     <th>Confirmation #</th>
                     <th>Meal Plan</th>
                 </tr>
@@ -252,8 +295,8 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
                     <td class="text-center"><?= h($s['city']) ?></td>
                     <td class="text-center"><?= h($s['room_type']) ?></td>
                     <td class="font-mono text-center"><?= h(fmtDate($s['checkin_date'])) ?></td>
-                    <td class="text-center font-bold"><?= (int)$s['nights'] ?></td>
                     <td class="font-mono text-center"><?= h(fmtDate($s['checkout_date'])) ?></td>
+                    <td class="text-center font-bold"><?= (int)$s['nights'] ?></td>
                     <td class="text-center font-mono"><?= h($s['confirmation_number'] ?: '-') ?></td>
                     <td class="text-center"><?= h($s['meal_plan']) ?></td>
                 </tr>
@@ -261,12 +304,13 @@ $confirmationSummary = implode(', ', array_filter(array_map(static fn($s) => $s[
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
+                    <td colspan="6" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
                     <td class="text-center font-bold" style="background:#F6F8FC;"><?= (int)$b['total_nights'] ?></td>
-                    <td colspan="3" style="background:#F6F8FC;"></td>
+                    <td colspan="2" style="background:#F6F8FC;"></td>
                 </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="remarks-box">
             <strong>Remarks:</strong>
