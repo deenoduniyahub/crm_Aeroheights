@@ -98,10 +98,10 @@ $hotelBookings = HotelBookingController::getAll(50);
                 </div>
             </div>
 
-            <!-- STRUCTURED OUTBOUND FLIGHT (Pakistan to KSA) -->
+            <!-- STRUCTURED OUTBOUND FLIGHT -->
             <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-200 space-y-3">
                 <span class="font-bold text-indigo-950 uppercase tracking-wider text-xs block">
-                    <i class="fa-solid fa-plane-departure mr-1.5 text-indigo-600"></i> Outbound Flight (Pakistan to KSA)
+                    <i class="fa-solid fa-plane-departure mr-1.5 text-indigo-600"></i> Outbound Flight
                 </span>
                 <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-7 gap-2">
                     <div>
@@ -110,11 +110,11 @@ $hotelBookings = HotelBookingController::getAll(50);
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">From (City)</label>
-                        <input type="text" id="vc_out_from" placeholder="e.g. Lahore" class="w-full border rounded-lg p-2 bg-white">
+                        <input type="text" id="vc_out_from" placeholder="Airport / city code" class="w-full border rounded-lg p-2 bg-white">
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">To (City)</label>
-                        <input type="text" id="vc_out_to" placeholder="e.g. Jeddah" class="w-full border rounded-lg p-2 bg-white">
+                        <input type="text" id="vc_out_to" placeholder="Airport / city code" class="w-full border rounded-lg p-2 bg-white">
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Departure Date</label>
@@ -125,7 +125,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                         <input type="time" id="vc_out_dep_time" class="w-full border rounded-lg p-2 font-mono bg-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">KSA Arrival Date</label>
+                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Arrival Date</label>
                         <input type="date" id="vc_out_arr_date" class="w-full border rounded-lg p-2 font-mono bg-white">
                     </div>
                     <div>
@@ -135,10 +135,10 @@ $hotelBookings = HotelBookingController::getAll(50);
                 </div>
             </div>
 
-            <!-- STRUCTURED RETURN FLIGHT (KSA to Pakistan) -->
+            <!-- STRUCTURED RETURN FLIGHT -->
             <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-200 space-y-3">
                 <span class="font-bold text-rose-950 uppercase tracking-wider text-xs block">
-                    <i class="fa-solid fa-plane-arrival mr-1.5 text-rose-600"></i> Return Flight (KSA to Pakistan)
+                    <i class="fa-solid fa-plane-arrival mr-1.5 text-rose-600"></i> Return Flight
                 </span>
                 <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-7 gap-2">
                     <div>
@@ -147,14 +147,14 @@ $hotelBookings = HotelBookingController::getAll(50);
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">From (City)</label>
-                        <input type="text" id="vc_ret_from" placeholder="e.g. Madinah" class="w-full border rounded-lg p-2 bg-white">
+                        <input type="text" id="vc_ret_from" placeholder="Airport / city code" class="w-full border rounded-lg p-2 bg-white">
                     </div>
                     <div>
                         <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">To (City)</label>
-                        <input type="text" id="vc_ret_to" placeholder="e.g. Lahore" class="w-full border rounded-lg p-2 bg-white">
+                        <input type="text" id="vc_ret_to" placeholder="Airport / city code" class="w-full border rounded-lg p-2 bg-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">KSA Departure Date</label>
+                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Departure Date</label>
                         <input type="date" id="vc_ret_dep_date" class="w-full border rounded-lg p-2 font-mono bg-white">
                     </div>
                     <div>
@@ -162,7 +162,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                         <input type="time" id="vc_ret_dep_time" class="w-full border rounded-lg p-2 font-mono bg-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Pak Reached Date</label>
+                        <label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Arrival Date</label>
                         <input type="date" id="vc_ret_arr_date" class="w-full border rounded-lg p-2 font-mono bg-white">
                     </div>
                     <div>
@@ -228,7 +228,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                         <div class="md:col-span-1"><label class="block text-[10px] font-semibold text-slate-600 mb-0.5">Nights</label><input type="number" oninput="recalculateStayCost(this)" class="stay-nights w-full border border-slate-300 rounded-lg p-2 font-bold text-amber-700 outline-none text-center" value="1" min="1"></div>
                         <div class="md:col-span-1"><label class="block text-[10px] font-semibold text-rose-600 mb-0.5">Buy/Night</label><input type="number" step="0.01" oninput="recalculateStayCost(this)" placeholder="0.00" class="stay-buy-rate w-full border border-slate-300 rounded-lg p-2 font-mono text-rose-600 outline-none text-center"></div>
                         <div class="md:col-span-1"><label class="block text-[10px] font-semibold text-emerald-700 mb-0.5">Sell/Night</label><input type="number" step="0.01" oninput="recalculateStayCost(this)" placeholder="0.00" class="stay-sell-rate w-full border border-slate-300 rounded-lg p-2 font-mono font-bold text-emerald-700 outline-none text-center"></div>
-                        <div class="md:col-span-1 flex items-center justify-between pb-1"><div class="text-[11px] font-bold text-slate-700 font-mono stay-total-display">0 SAR</div><button type="button" onclick="removeStayRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1" title="Remove Stay"><i class="fa-solid fa-trash-can"></i></button></div>
+                        <div class="md:col-span-1 flex items-center justify-between pb-1"><div class="text-[11px] font-bold text-slate-700 font-mono stay-total-display">0 PKR</div><button type="button" onclick="removeStayRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1" title="Remove Stay"><i class="fa-solid fa-trash-can"></i></button></div>
                     </div>
                 </div>
 
@@ -236,8 +236,8 @@ $hotelBookings = HotelBookingController::getAll(50);
                 <div class="bg-white p-3 rounded-xl border border-amber-200 flex flex-wrap items-center justify-between text-xs font-mono font-bold">
                     <div class="text-slate-600 font-sans">Total Accommodation Nights: <span id="grandTotalNights" class="text-amber-700 font-mono font-bold">1</span> Nights</div>
                     <div class="flex items-center space-x-4">
-                        <div class="text-rose-600">Total Buy Cost: <span id="grandTotalBuy">0.00</span> SAR</div>
-                        <div class="text-emerald-700 font-black text-sm">Total Sell Price: <span id="grandTotalSell">0.00</span> SAR</div>
+                        <div class="text-rose-600">Total Buy Cost: <span id="grandTotalBuy">0.00</span> PKR</div>
+                        <div class="text-emerald-700 font-black text-sm">Total Sell Price: <span id="grandTotalSell">0.00</span> PKR</div>
                     </div>
                 </div>
             </div>
@@ -435,9 +435,9 @@ $hotelBookings = HotelBookingController::getAll(50);
                 <div class="bg-white p-3 rounded-xl border border-teal-200 flex flex-wrap items-center justify-between gap-2 text-xs font-mono font-bold">
                     <div class="text-slate-600 font-sans">Total Nights (all hotels): <span id="hb_grand_total_nights" class="text-teal-700 font-mono font-bold">0</span></div>
                     <div class="flex items-center flex-wrap gap-4">
-                        <div class="text-rose-600">Total Buy: <span id="hb_grand_total_buy">0.00</span> SAR</div>
-                        <div class="text-emerald-700 font-black text-sm">Total Sell: <span id="hb_grand_total_sell">0.00</span> SAR</div>
-                        <div class="text-indigo-700">Profit: <span id="hb_grand_total_profit">0.00</span> SAR</div>
+                        <div class="text-rose-600">Total Buy: <span id="hb_grand_total_buy">0.00</span> PKR</div>
+                        <div class="text-emerald-700 font-black text-sm">Total Sell: <span id="hb_grand_total_sell">0.00</span> PKR</div>
+                        <div class="text-indigo-700">Profit: <span id="hb_grand_total_profit">0.00</span> PKR</div>
                     </div>
                 </div>
             </div>
@@ -526,7 +526,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                         <th class="p-3.5">Family Head / Lead</th>
                         <th class="p-3.5">Total Nights</th>
                         <th class="p-3.5">PAX</th>
-                        <th class="p-3.5 text-right">Sell Total (SAR)</th>
+                        <th class="p-3.5 text-right">Sell Total (PKR)</th>
                         <th class="p-3.5 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -545,7 +545,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                             </td>
                             <td class="p-3.5 font-bold text-slate-700"><?= $v['total_nights'] ?> Nights</td>
                             <td class="p-3.5"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-[10px] font-semibold"><?= $v['total_pax'] ?> PAX / <?= $v['total_beds'] ?> Beds</span></td>
-                            <td class="p-3.5 text-right font-mono font-bold text-emerald-700"><?= number_format((float)$v['sell_rate_sar'], 2) ?></td>
+                            <td class="p-3.5 text-right font-mono font-bold text-emerald-700"><?= number_format((float)$v['sell_rate_pkr'], 2) ?></td>
                             <td class="p-3.5 text-right">
                                 <div class="flex justify-end gap-2">
                                     <button type="button" onclick="editVoucher(<?= (int)$v['id'] ?>)" class="text-indigo-600 hover:text-indigo-800 p-1.5" title="Edit Voucher">
@@ -586,7 +586,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                         <th class="p-3.5">Lead Guest</th>
                         <th class="p-3.5">Hotel / City</th>
                         <th class="p-3.5">Nights</th>
-                        <th class="p-3.5 text-right">Sell Total (SAR)</th>
+                        <th class="p-3.5 text-right">Sell Total (PKR)</th>
                         <th class="p-3.5 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -612,7 +612,7 @@ $hotelBookings = HotelBookingController::getAll(50);
                                 <?php if (!empty($hb['transport_leg_count'])): ?><span class="bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded text-[10px] font-bold ml-1" title="Auto-generated transport legs"><i class="fa-solid fa-van-shuttle"></i> <?= (int)$hb['transport_leg_count'] ?></span><?php endif; ?>
                             </td>
                             <td class="p-3.5 font-bold text-slate-700"><?= (int)$hb['total_nights'] ?> Nights</td>
-                            <td class="p-3.5 text-right font-mono font-bold text-emerald-700"><?= number_format((float)$hb['sell_total_sar'], 2) ?></td>
+                            <td class="p-3.5 text-right font-mono font-bold text-emerald-700"><?= number_format((float)$hb['sell_total_pkr'], 2) ?></td>
                             <td class="p-3.5 text-right">
                                 <div class="flex justify-end gap-2">
                                     <button type="button" onclick="editHotelBooking(<?= (int)$hb['id'] ?>)" class="text-indigo-600 hover:text-indigo-800 p-1.5" title="Edit Booking">
@@ -763,9 +763,12 @@ async function editVoucher(id) {
 
         vcSelectedMasterBookings = (voucher.master_bookings || []).map(m => ({
             id: m.id, passenger_name: m.passenger_name, booking_code: m.booking_code,
-            flight_number: m.flight_number, arrival_date: m.arrival_date, departure_date: m.departure_date
+            passport_number: m.passport_number, flight_number: m.flight_number,
+            flight_itinerary_json: m.flight_itinerary_json, gender: m.gender, pax_type: m.pax_type,
+            arrival_date: m.arrival_date, departure_date: m.departure_date
         }));
         vcRenderSelectedMasterBookings();
+        vcSyncMutamerManifest();
         const vcSearchResults = document.getElementById('vc_master_search_results');
         if (vcSearchResults) { vcSearchResults.classList.add('hidden'); vcSearchResults.innerHTML = ''; }
 
@@ -779,14 +782,14 @@ async function editVoucher(id) {
         document.getElementById('vc_custom_routes').innerHTML = '';
         (voucher.transport_legs || []).filter(leg => Number(leg.auto_generated) === 2).forEach(leg => vcAddCustomRoute({
             route: leg.route_details, date: leg.service_date, type: leg.vehicle_type,
-            buy: String(Number(leg.buy_rate_sar)), sell: String(Number(leg.sell_rate_sar))
+            buy: String(Number(leg.buy_rate_pkr)), sell: String(Number(leg.sell_rate_pkr))
         }));
         const vcItineraryLegs = (voucher.transport_legs || []).filter(leg => Number(leg.auto_generated) !== 2);
         vcItineraryLegs.forEach(leg => {
             const o = {};
             if ((leg.vehicle_type || '') !== (voucher.transport_auto_type || 'CAR')) o.type = leg.vehicle_type || '';
-            if (Number(leg.buy_rate_sar) !== Number(voucher.transport_auto_buy_rate || 0)) o.buy = String(Number(leg.buy_rate_sar));
-            if (Number(leg.sell_rate_sar) !== Number(voucher.transport_auto_sell_rate || 0)) o.sell = String(Number(leg.sell_rate_sar));
+            if (Number(leg.buy_rate_pkr) !== Number(voucher.transport_auto_buy_rate || 0)) o.buy = String(Number(leg.buy_rate_pkr));
+            if (Number(leg.sell_rate_pkr) !== Number(voucher.transport_auto_sell_rate || 0)) o.sell = String(Number(leg.sell_rate_pkr));
             if (Object.keys(o).length) vcRouteOverrides[String(leg.route_details).toUpperCase()] = o;
         });
         vcSkippedRoutes = new Set();
@@ -884,8 +887,8 @@ async function submitVoucherForm(e) {
         flight_ret_dep_time: document.getElementById('vc_ret_dep_time').value,
         flight_ret_arr_date: document.getElementById('vc_ret_arr_date').value,
         flight_ret_arr_time: document.getElementById('vc_ret_arr_time').value,
-        buy_rate_sar: Number(totalBuy.toFixed(2)),
-        sell_rate_sar: Number(totalSell.toFixed(2)),
+        buy_rate_pkr: Number(totalBuy.toFixed(2)),
+        sell_rate_pkr: Number(totalSell.toFixed(2)),
         voucher_date: document.getElementById('vc_voucher_date').value || editingVoucherDate || todayIsoDate(),
         stays,
         mutamers,

@@ -99,10 +99,10 @@
             <div>${lbl('Agent (Client)')}<select id="smd_agent" class="sm-in">${opt(typeof AST_AGENTS !== 'undefined' ? AST_AGENTS : [], d.agent_id, 'Select agent')}</select></div>
             <div>${lbl('Supplier / Vendor')}<select id="smd_vendor" class="sm-in">${opt(typeof AST_VENDORS !== 'undefined' ? AST_VENDORS : [], d.vendor_id, 'Select supplier')}</select></div>
             <div>${lbl('Status')}<select id="smd_status" class="sm-in">${['draft', 'confirmed', 'issued', 'completed', 'cancelled'].map(s => `<option ${(d.status || 'draft') === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
-            <div>${lbl('Visa Buy (SAR)')}<input type="number" min="0" step="0.01" id="smd_vbuy" class="sm-in font-mono text-rose-700" value="${esc(d.visa_buy || '')}" placeholder="0"></div>
-            <div>${lbl('Visa Sell (SAR)')}<input type="number" min="0" step="0.01" id="smd_vsell" class="sm-in font-mono text-indigo-700" value="${esc(d.visa_sell || '')}" placeholder="0"></div>
-            <div>${lbl('Ticket Buy (SAR)')}<input type="number" min="0" step="0.01" id="smd_tbuy" class="sm-in font-mono text-rose-700" value="${esc(d.ticket_buy || '')}" placeholder="0"></div>
-            <div>${lbl('Ticket Sell (SAR)')}<input type="number" min="0" step="0.01" id="smd_tsell" class="sm-in font-mono text-sky-700" value="${esc(d.ticket_sell || '')}" placeholder="0"></div>
+            <div>${lbl('Visa Buy (PKR)')}<input type="number" min="0" step="0.01" id="smd_vbuy" class="sm-in font-mono text-rose-700" value="${esc(d.visa_buy || '')}" placeholder="0"></div>
+            <div>${lbl('Visa Sell (PKR)')}<input type="number" min="0" step="0.01" id="smd_vsell" class="sm-in font-mono text-indigo-700" value="${esc(d.visa_sell || '')}" placeholder="0"></div>
+            <div>${lbl('Ticket Buy (PKR)')}<input type="number" min="0" step="0.01" id="smd_tbuy" class="sm-in font-mono text-rose-700" value="${esc(d.ticket_buy || '')}" placeholder="0"></div>
+            <div>${lbl('Ticket Sell (PKR)')}<input type="number" min="0" step="0.01" id="smd_tsell" class="sm-in font-mono text-sky-700" value="${esc(d.ticket_sell || '')}" placeholder="0"></div>
             <div class="col-span-2 md:col-span-4">${lbl('Notes')}<input id="smd_notes" class="sm-in" maxlength="200" value="${esc(d.notes || '')}" placeholder="Optional — the PNR is added automatically"></div>
           </div>
         </details>`;
@@ -120,12 +120,12 @@
         const n = S.tickets.length + S.passports.length;
         shell(`
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            ${zone('tickets', 'fa-plane-departure', 'Tickets', 'Arrival & return — one combined ticket or separate files', 'sky')}
+            ${zone('tickets', 'fa-plane-departure', 'Tickets', 'Any route — one combined ticket or separate files', 'sky')}
             ${zone('passports', 'fa-passport', 'Passports', 'PDFs or photos, one or many — any order', 'violet')}
           </div>
           <div class="mt-4">${defaultsHtml()}</div>
           <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
-            <div class="rounded-xl bg-white border border-slate-200 px-3 py-2"><i class="fa-solid fa-plane-arrival text-sky-500 mr-1"></i> Flight &amp; arrival = the flight that lands in KSA</div>
+            <div class="rounded-xl bg-white border border-slate-200 px-3 py-2"><i class="fa-solid fa-plane-arrival text-sky-500 mr-1"></i> Every route, flight number, date and time is saved from the ticket</div>
             <div class="rounded-xl bg-white border border-slate-200 px-3 py-2"><i class="fa-solid fa-user-check text-violet-500 mr-1"></i> Each passport is matched to its traveller by name</div>
             <div class="rounded-xl bg-white border border-slate-200 px-3 py-2"><i class="fa-solid fa-paperclip text-fuchsia-500 mr-1"></i> Ticket 1, Ticket 2 &amp; passport PDFs attached automatically</div>
           </div>`,
@@ -298,11 +298,12 @@
               <div class="mt-2 grid grid-cols-2 md:grid-cols-7 gap-2">
                 <div class="col-span-2">${field('passenger_name', 'Passenger name', 'font-semibold')}</div>
                 ${field('passport_number', 'Passport no.', 'font-mono uppercase' + (r.passport_number ? '' : ' border-rose-300 bg-rose-50'))}
-                ${field('flight_number', 'Flight (PAK→KSA)', 'font-mono uppercase')}
-                ${field('arrival_date', 'Arrival (KSA)', 'font-mono', 'date')}
-                ${field('departure_date', 'Departure (exit)', 'font-mono', 'date')}
+                ${field('flight_number', 'Flight number', 'font-mono uppercase')}
+                ${field('arrival_date', 'From arrival date', 'font-mono', 'date')}
+                ${field('departure_date', 'Return departure date', 'font-mono', 'date')}
                 ${field('stay_days', 'Stay', 'font-semibold uppercase')}
               </div>
+              ${r.flight_itinerary?.length ? `<div class="mt-2 rounded-xl border border-sky-100 bg-sky-50/50 p-2"><div class="text-[9px] font-bold uppercase tracking-wider text-sky-800 mb-1"><i class="fa-solid fa-route mr-1"></i>Ticket itinerary · saved with exact route and times</div><div class="space-y-1">${r.flight_itinerary.map((s, n) => `<div class="flex flex-wrap gap-x-2 text-[10px] text-slate-600"><b class="text-sky-800">${n + 1}. ${esc(s.from || '?')} → ${esc(s.to || '?')}</b><span>${esc(s.flight || '')}</span><span>Dep ${esc(fmtDate(s.dep_date))} ${esc(s.dep_time || '')}</span><span>Arr ${esc(fmtDate(s.arr_date))} ${esc(s.arr_time || '')}</span></div>`).join('')}</div></div>` : ''}
               ${r.issues.length ? `<div class="mt-2 flex flex-wrap gap-1">${r.issues.map(t => badge('bg-amber-50 text-amber-800 border border-amber-200', 'fa-circle-info', esc(t))).join('')}</div>` : ''}
               <div class="mt-2 flex flex-wrap items-center gap-1">${files}</div>
             </div>
@@ -462,8 +463,9 @@
         const payload = {
             booking_date: d.booking_date || today(), agent_id: d.agent_id, vendor_id: d.vendor_id, status: d.status || 'draft',
             passenger_name: r.passenger_name.trim(), passport_number: r.passport_number.trim(), flight_number: r.flight_number,
+            gender: r.gender || '', pax_type: r.pax_type || r.type || 'Adult', flight_itinerary: r.flight_itinerary || [],
             arrival_date: r.arrival_date, departure_date: r.departure_date, stay_days: r.stay_days,
-            buy_rate_sar: d.visa_buy || 0, sell_rate_sar: d.visa_sell || 0, ticket_buy_rate_sar: d.ticket_buy || 0, ticket_sell_rate_sar: d.ticket_sell || 0,
+            buy_rate_pkr: d.visa_buy || 0, sell_rate_pkr: d.visa_sell || 0, ticket_buy_rate_pkr: d.ticket_buy || 0, ticket_sell_rate_pkr: d.ticket_sell || 0,
             remarks: [d.notes, r.pnr ? 'PNR ' + r.pnr : ''].filter(Boolean).join(' · '),
             custom_field1: '', custom_field2: '', include_hotel: false, include_transport: false, hotel_stays: [], transport_transfers: [],
         };

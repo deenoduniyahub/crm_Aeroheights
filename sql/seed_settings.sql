@@ -9,6 +9,4 @@ INSERT IGNORE INTO `system_settings` (`setting_key`, `setting_value`) VALUES
 ('madinah_helpline', '+92 303 4512512'),
 ('makkah_team_whatsapp', '+92 303 5137777'),
 ('madinah_team_whatsapp', '+92 303 5137777'),
-('bank_details', ''),
-('currency_symbol', 'SAR'),
-('default_exchange_rate', '76.00');
+('bank_details', '');

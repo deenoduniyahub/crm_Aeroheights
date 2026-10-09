@@ -30,11 +30,11 @@ $vendor = $vendorData['vendor'] ?? null;
             <!-- Total Outstanding Payable Badge -->
             <div class="bg-cyan-50 border border-cyan-200 px-4 py-2 rounded-xl text-right">
                 <span class="text-[10px] font-bold text-cyan-600 uppercase block">Payable Balance</span>
-                <span class="text-base font-black text-cyan-900 font-mono"><?= number_format((float)$vendorData['total_payable_sar'], 2) ?> SAR</span>
+                <span class="text-base font-black text-cyan-900 font-mono"><?= number_format((float)$vendorData['total_payable_pkr'], 2) ?> PKR</span>
             </div>
 
             <button type="button" onclick="openVendorPaymentModal(<?= $selectedVendorId ?>, '<?= htmlspecialchars(addslashes($vendor['name'] ?? 'Vendor')) ?>')" class="bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-sm flex items-center">
-                <i class="fa-solid fa-hand-holding-dollar mr-1.5"></i> Disburse Payment (SAR)
+                <i class="fa-solid fa-hand-holding-dollar mr-1.5"></i> Disburse Payment (PKR)
             </button>
 
             <button type="button" onclick="window.print()" class="no-print bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold px-3.5 py-2.5 rounded-xl transition" title="Print Statement">
@@ -59,16 +59,16 @@ $vendor = $vendorData['vendor'] ?? null;
                         <th class="p-3.5">Date</th>
                         <th class="p-3.5">Description / Mutamer Name</th>
                         <th class="p-3.5">Passport #</th>
-                        <th class="p-3.5 text-right">Charges / Buy Rate (SAR)</th>
-                        <th class="p-3.5 text-right">Paid / Disbursed (SAR)</th>
-                        <th class="p-3.5 text-right">Outstanding Payable (SAR)</th>
+                        <th class="p-3.5 text-right">Charges / Buy Rate (PKR)</th>
+                        <th class="p-3.5 text-right">Paid / Disbursed (PKR)</th>
+                        <th class="p-3.5 text-right">Outstanding Payable (PKR)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-mono">
                     <?php if (empty($vendorData['ledger'])): ?>
                         <tr><td colspan="6" class="p-6 text-center text-slate-400 font-sans">No transactions or purchase charges logged for this vendor.</td></tr>
                     <?php else: foreach ($vendorData['ledger'] as $row): 
-                        $isPayment = ($row['record_type'] ?? '') === 'payment' || (float)$row['paid_sar'] > 0;
+                        $isPayment = ($row['record_type'] ?? '') === 'payment' || (float)$row['paid_pkr'] > 0;
                     ?>
                         <tr class="<?= $isPayment ? 'bg-gradient-to-r from-cyan-50 via-cyan-50/80 to-cyan-100/60 font-semibold border-l-4 border-cyan-600 shadow-2xs' : 'hover:bg-slate-50/80' ?> transition">
                             <td class="p-3.5 font-sans text-slate-500"><?= htmlspecialchars($row['entry_date'] ?? '') ?></td>
@@ -82,11 +82,11 @@ $vendor = $vendorData['vendor'] ?? null;
                                 <span class="text-[11px] text-slate-400 block font-normal"><?= htmlspecialchars($row['description'] ?? '') ?></span>
                             </td>
                             <td class="p-3.5 font-bold text-slate-700"><?= htmlspecialchars($row['passport_number'] ?: '-') ?></td>
-                            <td class="p-3.5 text-right text-rose-600 font-bold"><?= $row['charge_sar'] > 0 ? number_format((float)$row['charge_sar'], 2) : '-' ?></td>
+                            <td class="p-3.5 text-right text-rose-600 font-bold"><?= $row['charge_pkr'] > 0 ? number_format((float)$row['charge_pkr'], 2) : '-' ?></td>
                             <td class="p-3.5 text-right font-black <?= $isPayment ? 'text-cyan-800 text-sm' : 'text-slate-400' ?>">
-                                <?= $row['paid_sar'] > 0 ? number_format((float)$row['paid_sar'], 2) : '-' ?>
+                                <?= $row['paid_pkr'] > 0 ? number_format((float)$row['paid_pkr'], 2) : '-' ?>
                             </td>
-                            <td class="p-3.5 text-right font-black text-slate-900"><?= number_format((float)$row['balance_sar'], 2) ?></td>
+                            <td class="p-3.5 text-right font-black text-slate-900"><?= number_format((float)$row['balance_pkr'], 2) ?></td>
                         </tr>
                     <?php endforeach; endif; ?>
                 </tbody>
@@ -94,7 +94,7 @@ $vendor = $vendorData['vendor'] ?? null;
                     <tr>
                         <td colspan="5" class="p-3.5 text-right font-sans text-xs">Total Net Payable Balance:</td>
                         <td class="p-3.5 text-right font-mono font-black text-sm text-cyan-800">
-                            <?= number_format((float)$vendorData['total_payable_sar'], 2) ?> SAR
+                            <?= number_format((float)$vendorData['total_payable_pkr'], 2) ?> PKR
                         </td>
                     </tr>
                 </tfoot>

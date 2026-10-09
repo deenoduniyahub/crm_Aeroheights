@@ -35,7 +35,7 @@ if ($agentId <= 0) {
 $ledgerData = LedgerController::getAgentLedger($agentId);
 $agent = $ledgerData['agent'] ?? null;
 $entries = $ledgerData['ledger'] ?? [];
-$currentBalance = $ledgerData['current_balance_sar'] ?? 0.00;
+$currentBalance = $ledgerData['current_balance_pkr'] ?? 0.00;
 
 if (!$agent) {
     echo "Agent not found.";
@@ -82,7 +82,7 @@ if (!$agent) {
         </div>
         <div style="text-align: right;">
             <div><strong>Date:</strong> <?= date('d-m-Y') ?></div>
-            <div><strong>Symbol:</strong> SAR</div>
+            <div><strong>Symbol:</strong> PKR</div>
         </div>
     </div>
 
@@ -99,7 +99,7 @@ if (!$agent) {
         <div class="balance-card">
             <span style="font-size: 10px; color: #8A90A8; text-transform: uppercase;">Closing Net Balance</span><br>
             <span style="color: <?= $currentBalance > 0 ? '#26206F' : '#3B8296' ?>;">
-                <?= number_format($currentBalance, 2) ?> SAR
+                <?= number_format($currentBalance, 2) ?> PKR
             </span>
         </div>
     </div>
@@ -114,9 +114,9 @@ if (!$agent) {
                 <th>Passenger / Description</th>
                 <th>Passport / Ref</th>
                 <th>Service</th>
-                <th class="text-right">Debit (SAR)</th>
-                <th class="text-right">Credit (SAR)</th>
-                <th class="text-right">Balance (SAR)</th>
+                <th class="text-right">Debit (PKR)</th>
+                <th class="text-right">Credit (PKR)</th>
+                <th class="text-right">Balance (PKR)</th>
             </tr>
         </thead>
         <tbody>
@@ -135,13 +135,13 @@ if (!$agent) {
                         <td class="font-mono"><?= htmlspecialchars((string)($entry['passport_number'] ?? '-')) ?></td>
                         <td><?= htmlspecialchars($entry['service_type']) ?></td>
                         <td class="text-right font-mono" style="color: #E0475B;">
-                            <?= (float)$entry['debit_sar'] > 0 ? number_format((float)$entry['debit_sar'], 2) : '-' ?>
+                            <?= (float)$entry['debit_pkr'] > 0 ? number_format((float)$entry['debit_pkr'], 2) : '-' ?>
                         </td>
                         <td class="text-right font-mono" style="color: #3B8296;">
-                            <?= (float)$entry['credit_sar'] > 0 ? number_format((float)$entry['credit_sar'], 2) : '-' ?>
+                            <?= (float)$entry['credit_pkr'] > 0 ? number_format((float)$entry['credit_pkr'], 2) : '-' ?>
                         </td>
                         <td class="text-right font-mono" style="font-weight: bold;">
-                            <?= number_format((float)$entry['balance_sar'], 2) ?>
+                            <?= number_format((float)$entry['balance_pkr'], 2) ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

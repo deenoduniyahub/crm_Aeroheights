@@ -62,10 +62,10 @@ class BookingController {
             'flight_number'=>static fn(mixed $value): string=>strtoupper(trim((string)$value)),
             'arrival_date'=>fn(mixed $value): ?string=>self::dateOrNull($value),
             'departure_date'=>fn(mixed $value): ?string=>self::dateOrNull($value),
-            'buy_rate_sar'=>fn(mixed $value): float=>self::money($value),
-            'sell_rate_sar'=>fn(mixed $value): float=>self::money($value),
-            'ticket_buy_rate_sar'=>fn(mixed $value): float=>self::money($value),
-            'ticket_sell_rate_sar'=>fn(mixed $value): float=>self::money($value)
+            'buy_rate_pkr'=>fn(mixed $value): float=>self::money($value),
+            'sell_rate_pkr'=>fn(mixed $value): float=>self::money($value),
+            'ticket_buy_rate_pkr'=>fn(mixed $value): float=>self::money($value),
+            'ticket_sell_rate_pkr'=>fn(mixed $value): float=>self::money($value)
         ];
         foreach($fields as $field=>$normalizer){
             if(!array_key_exists($field,$data)||trim((string)$data[$field])==='')continue;
@@ -138,12 +138,9 @@ class BookingController {
             $type=trim((string)($r['type']??''))?:$defaultType;
             $buy=trim((string)($r['buy']??''))!==''?self::money($r['buy']):$defaultBuy;
             $sell=trim((string)($r['sell']??''))!==''?self::money($r['sell']):$defaultSell;
-            $isArrival=str_starts_with($route,'JED-');
-            $isDeparture=str_ends_with($route,'-JED');
-            $date=self::dateOrNull($r['date']??null)
-                ?:($isDeparture?$head['departure_date']:($isArrival?$head['arrival_date']:null));
+            $date=self::dateOrNull($r['date']??null);
             if(!$date)throw new RuntimeException("Enter a date for {$route}.");
-            $flight=($isArrival||$isDeparture)&&$head['flight_number']?strtoupper((string)$head['flight_number']):null;
+            $flight=null;
 
             $existingId=(int)Database::fetchValue(
                 "SELECT id FROM transport_bookings WHERE deleted_at IS NULL AND auto_generated=0 AND master_booking_id IN ($placeholders) AND UPPER(REPLACE(route_details,' ',''))=? ORDER BY id LIMIT 1",
@@ -151,9 +148,9 @@ class BookingController {
             );
             $values=[$headId,$agentId,$vendorId,$date,$flight,$head['passenger_name'],$head['passport_number']?:null,$paxCount,$type,$route,$buy,$sell];
             if($existingId>0){
-                Database::execute("UPDATE transport_bookings SET master_booking_id=?,agent_id=?,vendor_id=?,service_date=?,flight_number=?,pax_name=?,passport_number=?,pax_count=?,vehicle_type=?,route_details=?,buy_rate_sar=?,sell_rate_sar=?,updated_by=?,updated_at=NOW() WHERE id=?",array_merge($values,[$actor,$existingId]));
+                Database::execute("UPDATE transport_bookings SET master_booking_id=?,agent_id=?,vendor_id=?,service_date=?,flight_number=?,pax_name=?,passport_number=?,pax_count=?,vehicle_type=?,route_details=?,buy_rate_pkr=?,sell_rate_pkr=?,updated_by=?,updated_at=NOW() WHERE id=?",array_merge($values,[$actor,$existingId]));
             }else{
-                Database::execute("INSERT INTO transport_bookings (master_booking_id,agent_id,vendor_id,service_date,flight_number,terminal,pax_name,passport_number,pax_count,vehicle_type,pickup_time,route_details,buy_rate_sar,sell_rate_sar,status,auto_generated,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,'Terminal 1',?,?,?,?,'09:00:00',?,?,?,'scheduled',0,?,NOW(),?,NOW())",array_merge(array_slice($values,0,9),[$route,$buy,$sell,$actor,$actor]));
+                Database::execute("INSERT INTO transport_bookings (master_booking_id,agent_id,vendor_id,service_date,flight_number,terminal,pax_name,passport_number,pax_count,vehicle_type,pickup_time,route_details,buy_rate_pkr,sell_rate_pkr,status,auto_generated,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,'Terminal 1',?,?,?,?,'09:00:00',?,?,?,'scheduled',0,?,NOW(),?,NOW())",array_merge(array_slice($values,0,9),[$route,$buy,$sell,$actor,$actor]));
             }
             $saved++;
         }
@@ -174,10 +171,20 @@ class BookingController {
         $agentId=!empty($data['agent_id']) ? (int)$data['agent_id'] : null; $vendorId=!empty($data['vendor_id']) ? (int)$data['vendor_id'] : null;
         $name=trim((string)($data['passenger_name']??'')); $passport=strtoupper(trim((string)($data['passport_number']??'')));
         $flight=strtoupper(trim((string)($data['flight_number']??'')));
+        $existing = $id === null ? [] : (Database::fetchOne("SELECT flight_itinerary_json,gender,pax_type FROM master_bookings WHERE id=?",[$id]) ?: []);
+        $itinerary = array_key_exists('flight_itinerary', $data)
+            ? self::normalizeItinerary((array)$data['flight_itinerary'])
+            : (string)($existing['flight_itinerary_json'] ?? '[]');
+        $itineraryJson = is_string($itinerary) ? $itinerary : json_encode($itinerary, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($itineraryJson === false) throw new RuntimeException('Unable to encode the flight itinerary.');
+        $gender = strtoupper(trim((string)($data['gender'] ?? $existing['gender'] ?? '')));
+        $gender = in_array($gender, ['M', 'F'], true) ? $gender : null;
+        $paxType = trim((string)($data['pax_type'] ?? $existing['pax_type'] ?? 'Adult'));
+        if (!in_array($paxType, ['Adult', 'Child', 'Infant'], true)) $paxType = 'Adult';
         $arrival=self::dateOrNull($data['arrival_date']??null); $departure=self::dateOrNull($data['departure_date']??null);
         $stay=trim((string)($data['stay_days']??'')) ?: null;
-        $visaBuy=self::money($data['buy_rate_sar']??0); $visaSell=self::money($data['sell_rate_sar']??0);
-        $ticketBuy=self::money($data['ticket_buy_rate_sar']??$data['ticket_buy_sar']??0); $ticketSell=self::money($data['ticket_sell_rate_sar']??$data['ticket_sell_sar']??0);
+        $visaBuy=self::money($data['buy_rate_pkr']??0); $visaSell=self::money($data['sell_rate_pkr']??0);
+        $ticketBuy=self::money($data['ticket_buy_rate_pkr']??$data['ticket_buy_pkr']??0); $ticketSell=self::money($data['ticket_sell_rate_pkr']??$data['ticket_sell_pkr']??0);
         $remarks=trim((string)($data['remarks']??$data['notes']??'')) ?: null;
         $status=self::status($data['status']??'draft');
         $attachHotel=!empty($data['include_hotel']) || strtoupper((string)($data['attach_hotel']??''))==='Y' ? 1 : 0;
@@ -188,11 +195,54 @@ class BookingController {
 
         if ($id===null) {
             $code=self::generateBookingCode();
-            Database::execute("INSERT INTO master_bookings (booking_code,booking_date,agent_id,vendor_id,passenger_name,passport_number,flight_number,arrival_date,departure_date,stay_days,buy_rate_sar,sell_rate_sar,ticket_buy_rate_sar,ticket_sell_rate_sar,attach_hotel,attach_transport,remarks,status,custom_field1,custom_field2,custom_fields_json,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$code,$bookingDate,$agentId,$vendorId,$name,$passport,$flight,$arrival,$departure,$stay,$visaBuy,$visaSell,$ticketBuy,$ticketSell,$attachHotel,$attachTransport,$remarks,$status,$cf1,$cf2,$customJson,$actor,$actor]);
+            Database::execute("INSERT INTO master_bookings (booking_code,booking_date,agent_id,vendor_id,passenger_name,passport_number,flight_number,flight_itinerary_json,gender,pax_type,arrival_date,departure_date,stay_days,buy_rate_pkr,sell_rate_pkr,ticket_buy_rate_pkr,ticket_sell_rate_pkr,attach_hotel,attach_transport,remarks,status,custom_field1,custom_field2,custom_fields_json,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$code,$bookingDate,$agentId,$vendorId,$name,$passport,$flight,$itineraryJson,$gender,$paxType,$arrival,$departure,$stay,$visaBuy,$visaSell,$ticketBuy,$ticketSell,$attachHotel,$attachTransport,$remarks,$status,$cf1,$cf2,$customJson,$actor,$actor]);
             return Database::lastInsertId();
         }
-        Database::execute("UPDATE master_bookings SET booking_date=?,agent_id=?,vendor_id=?,passenger_name=?,passport_number=?,flight_number=?,arrival_date=?,departure_date=?,stay_days=?,buy_rate_sar=?,sell_rate_sar=?,ticket_buy_rate_sar=?,ticket_sell_rate_sar=?,attach_hotel=?,attach_transport=?,remarks=?,status=?,custom_field1=?,custom_field2=?,custom_fields_json=?,updated_by=?,updated_at=NOW() WHERE id=?",[$bookingDate,$agentId,$vendorId,$name,$passport,$flight,$arrival,$departure,$stay,$visaBuy,$visaSell,$ticketBuy,$ticketSell,$attachHotel,$attachTransport,$remarks,$status,$cf1,$cf2,$customJson,$actor,$id]);
+        Database::execute("UPDATE master_bookings SET booking_date=?,agent_id=?,vendor_id=?,passenger_name=?,passport_number=?,flight_number=?,flight_itinerary_json=?,gender=?,pax_type=?,arrival_date=?,departure_date=?,stay_days=?,buy_rate_pkr=?,sell_rate_pkr=?,ticket_buy_rate_pkr=?,ticket_sell_rate_pkr=?,attach_hotel=?,attach_transport=?,remarks=?,status=?,custom_field1=?,custom_field2=?,custom_fields_json=?,updated_by=?,updated_at=NOW() WHERE id=?",[$bookingDate,$agentId,$vendorId,$name,$passport,$flight,$itineraryJson,$gender,$paxType,$arrival,$departure,$stay,$visaBuy,$visaSell,$ticketBuy,$ticketSell,$attachHotel,$attachTransport,$remarks,$status,$cf1,$cf2,$customJson,$actor,$id]);
         return $id;
+    }
+
+    private static function normalizeItinerary(array $segments): array {
+        if (count($segments) > 40) throw new RuntimeException('A flight itinerary cannot contain more than 40 segments.');
+        $normalized = [];
+        foreach ($segments as $index => $segment) {
+            if (!is_array($segment)) continue;
+            $from = strtoupper(substr(preg_replace('/[^A-Z]/i', '', trim((string)($segment['from'] ?? ''))), 0, 3));
+            $to = strtoupper(substr(preg_replace('/[^A-Z]/i', '', trim((string)($segment['to'] ?? ''))), 0, 3));
+            $flight = strtoupper(substr(preg_replace('/[^A-Z0-9-]/i', '', trim((string)($segment['flight'] ?? ''))), 0, 20));
+            $depDate = self::dateOrNull($segment['dep_date'] ?? null);
+            $arrDate = self::dateOrNull($segment['arr_date'] ?? null);
+            $depTime = self::timeOrNull($segment['dep_time'] ?? null);
+            $arrTime = self::timeOrNull($segment['arr_time'] ?? null);
+            if ($from === '' && $to === '' && $flight === '' && !$depDate && !$arrDate) continue;
+            foreach (['dep_date' => $depDate, 'arr_date' => $arrDate] as $label => $date) {
+                if (trim((string)($segment[$label] ?? '')) !== '' && $date === null) {
+                    throw new RuntimeException('Flight segment #' . ((int)$index + 1) . ' has an invalid date.');
+                }
+            }
+            if (($from === '') !== ($to === '')) throw new RuntimeException('Flight segment #' . ((int)$index + 1) . ' must include both route airports or neither.');
+            foreach (['dep_time' => $depTime, 'arr_time' => $arrTime] as $label => $time) {
+                if (trim((string)($segment[$label] ?? '')) !== '' && $time === null) {
+                    throw new RuntimeException('Flight segment #' . ((int)$index + 1) . ' has an invalid time.');
+                }
+            }
+            $normalized[] = [
+                'flight' => $flight,
+                'from' => $from,
+                'to' => $to,
+                'from_city' => trim((string)($segment['from_city'] ?? '')),
+                'to_city' => trim((string)($segment['to_city'] ?? '')),
+                'dep_date' => $depDate,
+                'dep_time' => $depTime ? substr($depTime, 0, 5) : '',
+                'arr_date' => $arrDate,
+                'arr_time' => $arrTime ? substr($arrTime, 0, 5) : '',
+                'from_terminal' => trim((string)($segment['from_terminal'] ?? '')),
+                'to_terminal' => trim((string)($segment['to_terminal'] ?? '')),
+                'baggage' => trim((string)($segment['baggage'] ?? '')),
+                'duration' => trim((string)($segment['duration'] ?? '')),
+            ];
+        }
+        return $normalized;
     }
 
     private static function syncServices(int $bookingId, array $data): void {
@@ -204,13 +254,13 @@ class BookingController {
             $stays=self::normalizeStays((array)($data['hotel_stays']??$data['stays']??[]));
             if (!$stays) throw new RuntimeException('At least one complete hotel stay is required when Hotel Accommodation is attached.');
             foreach ($stays as $i=>$s) {
-                Database::execute("INSERT INTO hotel_stays (booking_id,line_item_id,sequence,city,hotel_name,room_type,checkin_date,checkout_date,nights,per_night_buy,per_night_sell,currency,meal_plan,view,pax,net_accommodation_charge,vat,notes,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$bookingId,$s['line_item_id'],$i+1,$s['city'],$s['hotel_name'],$s['room_type'],$s['checkin_date'],$s['checkout_date'],$s['nights'],$s['buy_rate'],$s['sell_rate'],'SAR',$s['meal_plan'],$s['view'],$s['pax'],$s['net_accommodation_charge'],$s['vat'],$s['notes'],$actor,$actor]);
+                Database::execute("INSERT INTO hotel_stays (booking_id,line_item_id,sequence,city,hotel_name,room_type,checkin_date,checkout_date,nights,per_night_buy,per_night_sell,currency,meal_plan,view,pax,net_accommodation_charge,vat,notes,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$bookingId,$s['line_item_id'],$i+1,$s['city'],$s['hotel_name'],$s['room_type'],$s['checkin_date'],$s['checkout_date'],$s['nights'],$s['buy_rate'],$s['sell_rate'],'PKR',$s['meal_plan'],$s['view'],$s['pax'],$s['net_accommodation_charge'],$s['vat'],$s['notes'],$actor,$actor]);
             }
         }
         if (!empty($data['include_transport']) || strtoupper((string)($data['attach_transport']??''))==='Y') {
             $transfers=self::normalizeTransfers((array)($data['transport_transfers']??$data['transports']??[]),$data);
             foreach ($transfers as $i=>$t) {
-                Database::execute("INSERT INTO transport_transfers (booking_id,line_item_id,sequence,service_date,pickup_time,flight_number,terminal,pax_name,passport_number,pax_count,vehicle_type,route_details,buy_rate,sell_rate,currency,notes,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$bookingId,$t['line_item_id'],$i+1,$t['service_date'],$t['pickup_time'],$t['flight_number'],$t['terminal'],$t['pax_name'],$t['passport_number'],$t['pax_count'],$t['vehicle_type'],$t['route_details'],$t['buy_rate'],$t['sell_rate'],'SAR',$t['notes'],$actor,$actor]);
+                Database::execute("INSERT INTO transport_transfers (booking_id,line_item_id,sequence,service_date,pickup_time,flight_number,terminal,pax_name,passport_number,pax_count,vehicle_type,route_details,buy_rate,sell_rate,currency,notes,created_by,created_at,updated_by,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",[$bookingId,$t['line_item_id'],$i+1,$t['service_date'],$t['pickup_time'],$t['flight_number'],$t['terminal'],$t['pax_name'],$t['passport_number'],$t['pax_count'],$t['vehicle_type'],$t['route_details'],$t['buy_rate'],$t['sell_rate'],'PKR',$t['notes'],$actor,$actor]);
             }
         }
     }
@@ -226,8 +276,8 @@ class BookingController {
     }
 
     private static function normalizeTransfers(array $transfers,array $bookingData): array {
-        if(!$transfers){$transfers=[['service_date'=>$bookingData['arrival_date']??$bookingData['booking_date']??date('Y-m-d'),'pickup_time'=>$bookingData['transport_time']??'08:00','flight_number'=>$bookingData['flight_number']??'','terminal'=>$bookingData['transport_terminal']??'Terminal 1','pax_name'=>$bookingData['passenger_name']??'','passport_number'=>$bookingData['passport_number']??'','pax_count'=>$bookingData['transport_pax_count']??1,'vehicle_type'=>$bookingData['transport_vehicle']??'Car','route_details'=>$bookingData['transport_route']??'JED-MAK','buy_rate'=>$bookingData['transport_buy_sar']??0,'sell_rate'=>$bookingData['transport_sell_sar']??0,'notes'=>$bookingData['transport_notes']??'']];}
-        $out=[];foreach($transfers as $i=>$t){if(!is_array($t))continue;$pax=trim((string)($t['pax_name']??$bookingData['passenger_name']??''));$vehicle=trim((string)($t['vehicle_type']??'Car'));if($pax===''||$vehicle==='')throw new RuntimeException('Transport transfer #'.($i+1).' requires passenger and vehicle type.');$out[]=['line_item_id'=>trim((string)($t['line_item_id']??''))?:bin2hex(random_bytes(8)),'service_date'=>self::dateOrNull($t['service_date']??null)?:date('Y-m-d'),'pickup_time'=>self::timeOrNull($t['pickup_time']??null)?:'08:00:00','flight_number'=>strtoupper(trim((string)($t['flight_number']??$bookingData['flight_number']??''))),'terminal'=>trim((string)($t['terminal']??'Terminal 1'))?:'Terminal 1','pax_name'=>$pax,'passport_number'=>strtoupper(trim((string)($t['passport_number']??$bookingData['passport_number']??''))),'pax_count'=>max(1,(int)($t['pax_count']??1)),'vehicle_type'=>$vehicle,'route_details'=>trim((string)($t['route_details']??'JED-MAK'))?:'JED-MAK','buy_rate'=>self::money($t['buy_rate']??$t['buy_rate_sar']??0),'sell_rate'=>self::money($t['sell_rate']??$t['sell_rate_sar']??0),'notes'=>trim((string)($t['notes']??''))?:null];}return $out;
+        if(!$transfers){$transfers=[['service_date'=>$bookingData['arrival_date']??$bookingData['booking_date']??date('Y-m-d'),'pickup_time'=>$bookingData['transport_time']??'08:00','flight_number'=>$bookingData['flight_number']??'','terminal'=>$bookingData['transport_terminal']??'Terminal 1','pax_name'=>$bookingData['passenger_name']??'','passport_number'=>$bookingData['passport_number']??'','pax_count'=>$bookingData['transport_pax_count']??1,'vehicle_type'=>$bookingData['transport_vehicle']??'Car','route_details'=>$bookingData['transport_route']??'JED-MAK','buy_rate'=>$bookingData['transport_buy_pkr']??0,'sell_rate'=>$bookingData['transport_sell_pkr']??0,'notes'=>$bookingData['transport_notes']??'']];}
+        $out=[];foreach($transfers as $i=>$t){if(!is_array($t))continue;$pax=trim((string)($t['pax_name']??$bookingData['passenger_name']??''));$vehicle=trim((string)($t['vehicle_type']??'Car'));if($pax===''||$vehicle==='')throw new RuntimeException('Transport transfer #'.($i+1).' requires passenger and vehicle type.');$out[]=['line_item_id'=>trim((string)($t['line_item_id']??''))?:bin2hex(random_bytes(8)),'service_date'=>self::dateOrNull($t['service_date']??null)?:date('Y-m-d'),'pickup_time'=>self::timeOrNull($t['pickup_time']??null)?:'08:00:00','flight_number'=>strtoupper(trim((string)($t['flight_number']??$bookingData['flight_number']??''))),'terminal'=>trim((string)($t['terminal']??'Terminal 1'))?:'Terminal 1','pax_name'=>$pax,'passport_number'=>strtoupper(trim((string)($t['passport_number']??$bookingData['passport_number']??''))),'pax_count'=>max(1,(int)($t['pax_count']??1)),'vehicle_type'=>$vehicle,'route_details'=>trim((string)($t['route_details']??'JED-MAK'))?:'JED-MAK','buy_rate'=>self::money($t['buy_rate']??$t['buy_rate_pkr']??0),'sell_rate'=>self::money($t['sell_rate']??$t['sell_rate_pkr']??0),'notes'=>trim((string)($t['notes']??''))?:null];}return $out;
     }
 
     public static function getById(int $id): ?array {
@@ -246,7 +296,8 @@ class BookingController {
         $like = '%' . $q . '%';
         return Database::fetchAll(
             "SELECT mb.id, mb.booking_code, mb.passenger_name, mb.passport_number, mb.flight_number,
-                    mb.arrival_date, mb.departure_date, a.name AS agent_name, mb.agent_id
+                    mb.flight_itinerary_json, mb.gender, mb.pax_type, mb.arrival_date, mb.departure_date,
+                    a.name AS agent_name, mb.agent_id
              FROM master_bookings mb
              LEFT JOIN agents a ON a.id = mb.agent_id
              WHERE mb.deleted_at IS NULL

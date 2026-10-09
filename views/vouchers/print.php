@@ -472,7 +472,7 @@ if ($transportLegs) {
         <!-- Flight Details -->
         <div class="flight-grid">
             <div>
-                <div class="section-title">Departure (Pakistan to KSA)</div>
+                <div class="section-title">Outbound Flight</div>
                 <table>
                     <thead>
                         <tr><th>Flight</th><th>Sector</th><th>Departure</th><th>Arrival</th></tr>
@@ -488,7 +488,7 @@ if ($transportLegs) {
                 </table>
             </div>
             <div>
-                <div class="section-title">Arrival (KSA to PAK)</div>
+                <div class="section-title">Return Flight</div>
                 <table>
                     <thead>
                         <tr><th>Flight</th><th>Sector</th><th>Departure</th><th>Arrival</th></tr>

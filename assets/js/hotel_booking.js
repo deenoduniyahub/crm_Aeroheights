@@ -105,7 +105,7 @@ function createHotelBookingStayRowHtml() {
             <input type="number" step="0.01" oninput="recalculateHotelBookingStayCost(this)" placeholder="0.00" class="hb-stay-sell-rate w-full border border-slate-300 rounded-lg p-2 font-mono font-bold text-emerald-700 outline-none text-center">
         </div>
         <div class="md:col-span-1 flex items-center justify-between pb-1">
-            <div class="text-[11px] font-bold text-slate-700 font-mono hb-stay-total-display">0 SAR</div>
+            <div class="text-[11px] font-bold text-slate-700 font-mono hb-stay-total-display">0 PKR</div>
             <button type="button" onclick="removeHotelBookingStayRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1" title="Remove Hotel">
                 <i class="fa-solid fa-trash-can"></i>
             </button>
@@ -163,7 +163,7 @@ function recalculateHotelBookingStayCost(element) {
     const rooms = Math.max(1, parseFloat(row.querySelector('.hb-stay-rooms')?.value) || 1);
     const sellRate = Math.max(0, parseFloat(row.querySelector('.hb-stay-sell-rate')?.value) || 0);
     const totalDisplay = row.querySelector('.hb-stay-total-display');
-    if (totalDisplay) totalDisplay.textContent = `${(nights * rooms * sellRate).toFixed(2)} SAR`;
+    if (totalDisplay) totalDisplay.textContent = `${(nights * rooms * sellRate).toFixed(2)} PKR`;
     updateGrandHotelBookingTotals();
 }
 
@@ -576,14 +576,14 @@ async function editHotelBooking(id) {
         document.getElementById('hb_custom_routes').innerHTML = '';
         (b.transport_legs || []).filter(leg => Number(leg.auto_generated) === 2).forEach(leg => hbAddCustomRoute({
             route: leg.route_details, date: leg.service_date, type: leg.vehicle_type,
-            buy: String(Number(leg.buy_rate_sar)), sell: String(Number(leg.sell_rate_sar))
+            buy: String(Number(leg.buy_rate_pkr)), sell: String(Number(leg.sell_rate_pkr))
         }));
         const hbItineraryLegs = (b.transport_legs || []).filter(leg => Number(leg.auto_generated) !== 2);
         hbItineraryLegs.forEach(leg => {
             const o = {};
             if ((leg.vehicle_type || '') !== (b.transport_type || 'CAR')) o.type = leg.vehicle_type || '';
-            if (Number(leg.buy_rate_sar) !== Number(b.transport_buy_rate || 0)) o.buy = String(Number(leg.buy_rate_sar));
-            if (Number(leg.sell_rate_sar) !== Number(b.transport_sell_rate || 0)) o.sell = String(Number(leg.sell_rate_sar));
+            if (Number(leg.buy_rate_pkr) !== Number(b.transport_buy_rate || 0)) o.buy = String(Number(leg.buy_rate_pkr));
+            if (Number(leg.sell_rate_pkr) !== Number(b.transport_sell_rate || 0)) o.sell = String(Number(leg.sell_rate_pkr));
             if (Object.keys(o).length) hbRouteOverrides[String(leg.route_details).toUpperCase()] = o;
         });
         hbSkippedRoutes = new Set();

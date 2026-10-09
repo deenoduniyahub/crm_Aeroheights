@@ -10,7 +10,6 @@ $flash = Session::getFlash();
 $csrfToken = Session::getCsrfToken();
 $agencyName = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_name'") ?: 'Aeroheights Travels & Tours';
 $agencyLogo = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'agency_logo'") ?: 'assets/img/logo.png';
-$currencySymbol = Database::fetchValue("SELECT setting_value FROM system_settings WHERE setting_key = 'currency_symbol'") ?: 'SAR';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-slate-50">
@@ -143,4 +142,3 @@ $currencySymbol = Database::fetchValue("SELECT setting_value FROM system_setting
 
     <!-- Master Layout Body Wrapper -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full grid grid-cols-1 md:grid-cols-12 gap-6">
-

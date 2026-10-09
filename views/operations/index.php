@@ -129,8 +129,8 @@ $tomorrowDate = date('Y-m-d', strtotime('+1 day'));
                 <thead class="bg-slate-50 text-slate-700 border-b border-slate-200 uppercase font-bold text-[11px]">
                     <tr>
                         <th class="p-3.5">Flight #</th>
-                        <th class="p-3.5">Sector / Route</th>
-                        <th class="p-3.5">Arrival Time</th>
+                        <th class="p-3.5">From / Return Route</th>
+                        <th class="p-3.5">Reached</th>
                         <th class="p-3.5">Mutamer Name</th>
                         <th class="p-3.5">Passport</th>
                         <th class="p-3.5">Booking Agent</th>
@@ -146,8 +146,39 @@ $tomorrowDate = date('Y-m-d', strtotime('+1 day'));
                         </tr>
                     <?php else: foreach ($manifest['arrivals'] as $r): ?>
                         <tr class="hover:bg-indigo-50/30 transition">
-                            <td class="p-3.5 font-mono font-bold text-indigo-600"><?= htmlspecialchars($r['flight_number'] ?: 'DIRECT/TBA') ?></td>
-                            <td class="p-3.5 font-medium text-slate-700"><?= htmlspecialchars($r['flight_out_from'] ? $r['flight_out_from'] . ' -> ' . $r['flight_out_to'] : 'Pakistan -> KSA') ?></td>
+                            <td class="p-3.5">
+                                <div class="font-mono font-bold text-indigo-600"><?= htmlspecialchars($r['flight_number'] ?: 'DIRECT/TBA') ?></div>
+                                <?php if (!empty($r['return_flight_number'])): ?>
+                                    <div class="mt-1 whitespace-nowrap text-[10px] font-mono font-semibold text-rose-600">Return · <?= htmlspecialchars($r['return_flight_number']) ?></div>
+                                <?php endif; ?>
+                            </td>
+                            <td class="p-3.5 font-medium text-slate-700">
+                                <?php foreach ([
+                                    ['label' => 'From', 'route' => $r['from_route'] ?? '', 'date' => $r['from_date'] ?? '', 'legs' => $r['from_legs'] ?? [], 'color' => 'indigo'],
+                                    ['label' => 'Return', 'route' => $r['return_route'] ?? '', 'date' => $r['return_date'] ?? '', 'legs' => $r['return_legs'] ?? [], 'color' => 'rose'],
+                                ] as $journey): ?>
+                                    <?php if (!empty($journey['route'])): ?>
+                                        <details class="group <?= $journey['label']==='Return'?'mt-1':'' ?>">
+                                            <summary class="flex max-w-60 cursor-pointer list-none items-center gap-1 text-[10px] font-semibold <?= $journey['color']==='rose'?'text-rose-700':'text-indigo-700' ?> [&::-webkit-details-marker]:hidden" title="Show <?= htmlspecialchars(strtolower($journey['label'])) ?> flight times">
+                                                <span class="shrink-0"><?= htmlspecialchars($journey['label']) ?> · <?= htmlspecialchars($journey['date'] ? date('d-m-y', strtotime($journey['date'])) : '-') ?></span>
+                                                <span class="truncate"><?= htmlspecialchars($journey['route']) ?></span>
+                                                <i class="fa-solid fa-chevron-down shrink-0 text-[9px] transition-transform group-open:rotate-180"></i>
+                                            </summary>
+                                            <div class="mt-1.5 min-w-56 space-y-1 rounded-lg border <?= $journey['color']==='rose'?'border-rose-100 bg-rose-50/70':'border-indigo-100 bg-indigo-50/70' ?> p-2 text-[10px] leading-4 text-slate-500">
+                                                <?php foreach ($journey['legs'] as $leg): ?>
+                                                    <div class="border-l-2 <?= $journey['color']==='rose'?'border-rose-200':'border-indigo-200' ?> pl-2">
+                                                        <div class="font-semibold text-slate-700"><?= htmlspecialchars((string)($leg['from'] ?? '')) ?> → <?= htmlspecialchars((string)($leg['to'] ?? '')) ?><?= !empty($leg['flight'])?' · '.htmlspecialchars((string)$leg['flight']):'' ?></div>
+                                                        <div>Depart <?= htmlspecialchars(!empty($leg['dep_date'])?date('d-m-y',strtotime($leg['dep_date'])):'-') ?> <?= htmlspecialchars((string)($leg['dep_time'] ?? '')) ?></div>
+                                                        <div>Reached <?= htmlspecialchars(!empty($leg['arr_date'])?date('d-m-y',strtotime($leg['arr_date'])):'-') ?> <?= htmlspecialchars((string)($leg['arr_time'] ?? '')) ?></div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </details>
+                                    <?php elseif ($journey['label']==='From'): ?>
+                                        <div class="text-[10px] text-slate-500"><?= htmlspecialchars($r['flight_out_from'] ? $r['flight_out_from'].' → '.$r['flight_out_to'] : '-') ?></div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </td>
                             <td class="p-3.5 font-mono font-bold text-slate-900"><?= htmlspecialchars($r['flight_out_arr_time'] ? date('h:i A', strtotime($r['flight_out_arr_time'])) : 'Scheduled') ?></td>
                             <td class="p-3.5 font-semibold text-slate-800"><?= htmlspecialchars($r['passenger_name']) ?></td>
                             <td class="p-3.5 font-mono font-bold text-slate-700"><?= htmlspecialchars($r['passport_number']) ?></td>

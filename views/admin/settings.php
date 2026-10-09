@@ -120,12 +120,12 @@ $settings = AdminController::getSettings();
     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-6">
         <div class="border-b pb-3">
             <h3 class="font-bold text-slate-800 text-sm flex items-center">
-                <i class="fa-solid fa-gear text-amber-500 mr-2"></i> Agency Configuration, Logo & Currency Rates
+                <i class="fa-solid fa-gear text-amber-500 mr-2"></i> Agency Configuration & Logo
             </h3>
         </div>
 
         <form onsubmit="handleSettingsUpdate(event)" class="space-y-4 text-xs">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Agency Name</label>
                     <input type="text" id="set_agency_name" value="<?= htmlspecialchars($settings['agency_name'] ?? 'Aeroheights Travels & Tours') ?>" required class="w-full border rounded-xl p-2.5">
@@ -133,10 +133,6 @@ $settings = AdminController::getSettings();
                 <div>
                     <label class="block font-semibold text-slate-700 mb-1">Agency Logo Path</label>
                     <input type="text" id="set_agency_logo" value="<?= htmlspecialchars($settings['agency_logo'] ?? 'assets/img/logo.png') ?>" required class="w-full border rounded-xl p-2.5 font-mono">
-                </div>
-                <div>
-                    <label class="block font-semibold text-slate-700 mb-1">Default Rate (PKR / SAR)</label>
-                    <input type="number" step="0.01" id="set_exchange_rate" value="<?= htmlspecialchars($settings['default_exchange_rate'] ?? '76.00') ?>" required class="w-full border rounded-xl p-2.5 font-bold text-emerald-700">
                 </div>
             </div>
 
@@ -367,7 +363,6 @@ async function handleSettingsUpdate(e) {
         agency_phone: document.getElementById('set_agency_phone').value,
         agency_email: document.getElementById('set_agency_email').value,
         agency_address: document.getElementById('set_agency_address').value,
-        default_exchange_rate: document.getElementById('set_exchange_rate').value,
         makkah_team_whatsapp: document.getElementById('set_makkah_team_whatsapp').value,
         madinah_team_whatsapp: document.getElementById('set_madinah_team_whatsapp').value,
         bank_details: document.getElementById('set_bank_details').value,
@@ -385,4 +380,3 @@ async function handleSettingsUpdate(e) {
     if (data.success) window.location.reload();
 }
 </script>
-

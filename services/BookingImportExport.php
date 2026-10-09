@@ -11,7 +11,7 @@ class BookingImportExport {
     public const HEADERS = [
         'Booking ID', 'Agent (Client)', 'Supplier / Vendor', 'Booking Date', 'Passenger Full Name',
         'Passport Number', 'Flight Number', 'Arrival Date (KSA)', 'Departure Date (Exit)', 'Duration / Package',
-        'Visa Buy Cost (SAR)', 'Visa Sell Price (SAR)', 'Ticket Buy Cost (SAR)', 'Ticket Sell Price (SAR)',
+        'Visa Buy Cost (PKR)', 'Visa Sell Price (PKR)', 'Ticket Buy Cost (PKR)', 'Ticket Sell Price (PKR)',
         'Attach Hotel (Y/N)', 'Attach Transport (Y/N)', 'Notes', 'Status', 'Created By', 'Created At',
         'CustomField1', 'CustomField2'
     ];
@@ -27,10 +27,10 @@ class BookingImportExport {
         'Arrival Date (KSA)' => ['arrival date','arrival date ksa','arrival','ksa arrival date'],
         'Departure Date (Exit)' => ['departure date','departure date exit','exit date','departure','return date'],
         'Duration / Package' => ['duration','package','duration package','stay days'],
-        'Visa Buy Cost (SAR)' => ['visa buy','visa buy cost','visa cost','buy rate','buy cost'],
-        'Visa Sell Price (SAR)' => ['visa sell','visa sell price','visa price','sell rate','sell price'],
-        'Ticket Buy Cost (SAR)' => ['ticket buy','ticket buy cost','ticket cost'],
-        'Ticket Sell Price (SAR)' => ['ticket sell','ticket sell price','ticket price'],
+        'Visa Buy Cost (PKR)' => ['visa buy','visa buy cost','visa cost','buy rate','buy cost'],
+        'Visa Sell Price (PKR)' => ['visa sell','visa sell price','visa price','sell rate','sell price'],
+        'Ticket Buy Cost (PKR)' => ['ticket buy','ticket buy cost','ticket cost'],
+        'Ticket Sell Price (PKR)' => ['ticket sell','ticket sell price','ticket price'],
         'Attach Hotel (Y/N)' => ['attach hotel','hotel','hotel attached'],
         'Attach Transport (Y/N)' => ['attach transport','transport','transport attached'],
         'Notes' => ['notes','remarks','remark','comments'],
@@ -76,10 +76,10 @@ class BookingImportExport {
                 'Arrival Date (KSA)' => $r['arrival_date'] ?? '',
                 'Departure Date (Exit)' => $r['departure_date'] ?? '',
                 'Duration / Package' => $r['stay_days'] ?? '',
-                'Visa Buy Cost (SAR)' => number_format((float)$r['buy_rate_sar'], 2, '.', ''),
-                'Visa Sell Price (SAR)' => number_format((float)$r['sell_rate_sar'], 2, '.', ''),
-                'Ticket Buy Cost (SAR)' => number_format((float)$r['ticket_buy_rate_sar'], 2, '.', ''),
-                'Ticket Sell Price (SAR)' => number_format((float)$r['ticket_sell_rate_sar'], 2, '.', ''),
+                'Visa Buy Cost (PKR)' => number_format((float)$r['buy_rate_pkr'], 2, '.', ''),
+                'Visa Sell Price (PKR)' => number_format((float)$r['sell_rate_pkr'], 2, '.', ''),
+                'Ticket Buy Cost (PKR)' => number_format((float)$r['ticket_buy_rate_pkr'], 2, '.', ''),
+                'Ticket Sell Price (PKR)' => number_format((float)$r['ticket_sell_rate_pkr'], 2, '.', ''),
                 'Attach Hotel (Y/N)' => !empty($r['has_hotel']) ? 'Y' : 'N',
                 'Attach Transport (Y/N)' => !empty($r['has_transport']) ? 'Y' : 'N',
                 'Notes' => $r['remarks'] ?? '',
@@ -160,7 +160,7 @@ class BookingImportExport {
                 ];
                 if ($existing) {
                     Database::execute(
-                        "UPDATE master_bookings SET booking_date=?, agent_id=?, vendor_id=?, passenger_name=?, passport_number=?, flight_number=?, arrival_date=?, departure_date=?, stay_days=?, buy_rate_sar=?, sell_rate_sar=?, ticket_buy_rate_sar=?, ticket_sell_rate_sar=?, remarks=?, status=?, custom_field1=?, custom_field2=?, custom_fields_json=?, updated_by=?, updated_at=NOW() WHERE id=?",
+                        "UPDATE master_bookings SET booking_date=?, agent_id=?, vendor_id=?, passenger_name=?, passport_number=?, flight_number=?, arrival_date=?, departure_date=?, stay_days=?, buy_rate_pkr=?, sell_rate_pkr=?, ticket_buy_rate_pkr=?, ticket_sell_rate_pkr=?, remarks=?, status=?, custom_field1=?, custom_field2=?, custom_fields_json=?, updated_by=?, updated_at=NOW() WHERE id=?",
                         [...$fields, Session::getActor(), (int)$existing['id']]
                     );
                     self::audit((int)$existing['id'], 'import_updated', $row);
@@ -168,7 +168,7 @@ class BookingImportExport {
                 } else {
                     $bookingCode = self::generateBookingCode();
                     Database::execute(
-                        "INSERT INTO master_bookings (booking_code, booking_date, agent_id, vendor_id, passenger_name, passport_number, flight_number, arrival_date, departure_date, stay_days, buy_rate_sar, sell_rate_sar, ticket_buy_rate_sar, ticket_sell_rate_sar, remarks, status, custom_field1, custom_field2, custom_fields_json, created_by, created_at, updated_by, updated_at)
+                        "INSERT INTO master_bookings (booking_code, booking_date, agent_id, vendor_id, passenger_name, passport_number, flight_number, arrival_date, departure_date, stay_days, buy_rate_pkr, sell_rate_pkr, ticket_buy_rate_pkr, ticket_sell_rate_pkr, remarks, status, custom_field1, custom_field2, custom_fields_json, created_by, created_at, updated_by, updated_at)
                          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW())",
                         [$bookingCode, ...$fields, Session::getActor(), Session::getActor()]
                     );
@@ -280,7 +280,7 @@ class BookingImportExport {
 
     private static function keyForCanonical(string $canonical): ?string {
         return match ($canonical) {
-            'Booking ID' => 'booking_id','Agent (Client)' => 'agent','Supplier / Vendor' => 'vendor','Booking Date' => 'booking_date','Passenger Full Name' => 'passenger_name','Passport Number' => 'passport_number','Flight Number' => 'flight_number','Arrival Date (KSA)' => 'arrival_date','Departure Date (Exit)' => 'departure_date','Duration / Package' => 'stay_days','Visa Buy Cost (SAR)' => 'visa_buy','Visa Sell Price (SAR)' => 'visa_sell','Ticket Buy Cost (SAR)' => 'ticket_buy','Ticket Sell Price (SAR)' => 'ticket_sell','Attach Hotel (Y/N)' => 'attach_hotel','Attach Transport (Y/N)' => 'attach_transport','Notes' => 'notes','Status' => 'status','Created By' => 'created_by','Created At' => 'created_at','CustomField1' => 'custom_field1','CustomField2' => 'custom_field2', default => null
+            'Booking ID' => 'booking_id','Agent (Client)' => 'agent','Supplier / Vendor' => 'vendor','Booking Date' => 'booking_date','Passenger Full Name' => 'passenger_name','Passport Number' => 'passport_number','Flight Number' => 'flight_number','Arrival Date (KSA)' => 'arrival_date','Departure Date (Exit)' => 'departure_date','Duration / Package' => 'stay_days','Visa Buy Cost (PKR)' => 'visa_buy','Visa Sell Price (PKR)' => 'visa_sell','Ticket Buy Cost (PKR)' => 'ticket_buy','Ticket Sell Price (PKR)' => 'ticket_sell','Attach Hotel (Y/N)' => 'attach_hotel','Attach Transport (Y/N)' => 'attach_transport','Notes' => 'notes','Status' => 'status','Created By' => 'created_by','Created At' => 'created_at','CustomField1' => 'custom_field1','CustomField2' => 'custom_field2', default => null
         };
     }
 
@@ -394,7 +394,7 @@ class BookingImportExport {
     private static function parseNumber(mixed $v): array {
         $v = trim((string)$v);
         if ($v === '') return [true, 0.0];
-        $v = str_replace([',', ' ', 'SAR', 'sar', '﷼'], '', $v);
+        $v = str_replace([',', ' ', 'PKR', 'pkr', '﷼'], '', $v);
         $v = preg_replace('/[^0-9.\-]/', '', $v) ?? $v;
         if ($v === '' || !is_numeric($v)) return [false, 0.0];
         return [true, round((float)$v, 2)];

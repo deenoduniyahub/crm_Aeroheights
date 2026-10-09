@@ -12,8 +12,9 @@ require_once __DIR__ . '/../services/TicketAiReader.php';
  * the results here. prepare() turns them into one draft Master Booking per traveller:
  *   - traveller list = everyone on the tickets (an arrival and a return ticket may be separate files),
  *     plus anyone whose passport was uploaded but who is on no ticket
- *   - flight_number = the flight that lands in KSA (PAK -> KSA arrival), arrival_date = the day it lands,
- *     departure_date = the day of the first flight leaving KSA after that
+ *   - full ticket itinerary (every route, flight, date, time and terminal) is kept on the booking
+ *   - the legacy arrival/departure fields prefer the KSA arrival/exit legs when present, otherwise
+ *     they use the first arrival and final departure in the ticket itinerary
  *   - passport number / gender / expiry from the matching passport, and which file + page holds it
  *   - duplicates: an existing Master Booking with the same passport and arrival date
  * The user reviews the drafts; the browser then creates them through save_booking and attaches the files.
@@ -62,6 +63,8 @@ class SmartMasterBookingController {
                 if ($after && !$exit) $exit = $s;
             }
         }
+        if (!$arrival && $segments) $arrival = $segments[0];
+        if (!$exit && count($segments) > 1) $exit = $segments[count($segments) - 1];
         return [$arrival, $exit];
     }
 
@@ -121,6 +124,7 @@ class SmartMasterBookingController {
     }
 
     private static function row(string $ticketName, array $p, ?array $pp, ?string $how, ?array $arr, ?array $exit, array $pnrs): array {
+        $segments = array_values($p['segments'] ?? []);
         $passportName = $pp ? trim($pp['given_names'] . ' ' . $pp['surname']) : '';
         $arrivalDate = $arr ? ($arr['arr_date'] ?: $arr['dep_date']) : '';
         $departureDate = $exit['dep_date'] ?? '';
@@ -133,7 +137,7 @@ class SmartMasterBookingController {
         elseif ($how === 'partial') $issues[] = 'Passport name only partly matches the ticket';
         elseif ($how === 'elimination') $issues[] = 'Passport given by elimination — names differ';
         if ($how === 'no_ticket') $issues[] = 'Not on any uploaded ticket — add flight details';
-        if ($how !== 'no_ticket' && !$arr) $issues[] = 'No flight into Saudi Arabia found on the ticket';
+        if ($how !== 'no_ticket' && !$arr && empty($p['segments'])) $issues[] = 'No usable flight itinerary was found on the ticket';
         $past = date('Y-m-d', strtotime('-7 days'));
         foreach (['Arrival' => $arrivalDate, 'Departure' => $departureDate] as $label => $d) {
             if ($d !== '' && $d < $past) $issues[] = $label . ' date ' . $d . ' is in the past — check the year';
@@ -156,10 +160,19 @@ class SmartMasterBookingController {
             'expiry' => $pp['expiry'] ?? '',
             'nationality' => $pp['nationality'] ?? '',
             'flight_number' => $arr ? self::displayFlight($arr['flight']) : '',
-            'arrival_route' => $arr ? $arr['from'] . '-' . $arr['to'] : '',
+            'gender' => strtoupper((string)(($pp['gender'] ?? '') ?: ($p['gender'] ?? ''))) ?: null,
+            'pax_type' => $p['type'] ?? 'Adult',
+            'arrival_route' => $segments ? implode('-', array_filter(array_merge(
+                [(string)$segments[0]['from']],
+                array_map(static fn(array $segment): string => (string)$segment['to'], $segments)
+            ))) : '',
             'arrival_date' => $arrivalDate,
             'return_flight' => $exit ? self::displayFlight($exit['flight']) : '',
             'departure_date' => $departureDate,
+            'flight_itinerary' => array_values(array_map(static function (array $segment): array {
+                unset($segment['file']);
+                return $segment;
+            }, $segments)),
             'stay_days' => $stay,
             'pnr' => $ticketFile !== null ? ($pnrs[$ticketFile] ?? '') : '',
             'ticket_file' => $ticketFile,

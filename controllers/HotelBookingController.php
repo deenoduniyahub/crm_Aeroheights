@@ -178,7 +178,7 @@ class HotelBookingController {
                     booking_ref, booking_date, agent_id, total_nights, lead_guest_name, company_name,
                     pax_adults, pax_children, pax_infants, remarks,
                     transport_enabled, transport_type, transport_buy_rate, transport_sell_rate,
-                    buy_total_sar, sell_total_sar,
+                    buy_total_pkr, sell_total_pkr,
                     created_by, created_at, updated_by, updated_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, NOW())",
                 [
@@ -232,7 +232,7 @@ class HotelBookingController {
                     booking_date = ?, agent_id = ?, total_nights = ?, lead_guest_name = ?, company_name = ?,
                     pax_adults = ?, pax_children = ?, pax_infants = ?, remarks = ?,
                     transport_enabled = ?, transport_type = ?, transport_buy_rate = ?, transport_sell_rate = ?,
-                    buy_total_sar = ?, sell_total_sar = ?, updated_by = ?, updated_at = NOW()
+                    buy_total_pkr = ?, sell_total_pkr = ?, updated_by = ?, updated_at = NOW()
                  WHERE id = ?",
                 [
                     $base['booking_date'], $base['agent_id'], $totals['total_nights'], $base['lead_guest_name'], $base['company_name'],
@@ -358,7 +358,7 @@ class HotelBookingController {
         $sql = "INSERT INTO transport_bookings (
                     master_booking_id, hotel_booking_id, agent_id, vendor_id, service_date, flight_number, terminal,
                     pax_name, passport_number, pax_count, vehicle_type, pickup_time, route_details,
-                    buy_rate_sar, sell_rate_sar, status, auto_generated, created_by, created_at, updated_by, updated_at
+                    buy_rate_pkr, sell_rate_pkr, status, auto_generated, created_by, created_at, updated_by, updated_at
                 ) VALUES (?, ?, ?, NULL, ?, ?, 'Terminal 1', ?, ?, ?, ?, '09:00:00', ?, ?, ?, 'scheduled', 1, ?, NOW(), ?, NOW())";
 
         $overrides = $base['transport_route_overrides'] ?? [];
@@ -410,7 +410,7 @@ class HotelBookingController {
             [$id]
         );
         $b['transport_legs'] = Database::fetchAll(
-            "SELECT route_details, vehicle_type, buy_rate_sar, sell_rate_sar, service_date, auto_generated
+            "SELECT route_details, vehicle_type, buy_rate_pkr, sell_rate_pkr, service_date, auto_generated
              FROM transport_bookings
              WHERE hotel_booking_id = ? AND auto_generated IN (1, 2) AND deleted_at IS NULL
              ORDER BY service_date ASC, id ASC",
@@ -430,14 +430,14 @@ class HotelBookingController {
         foreach ($allLegs as $l) {
             if ((int)$l['auto_generated'] !== 2) continue;
             $custom[] = ['route' => $l['route_details'], 'date' => $l['service_date'], 'type' => $l['vehicle_type'],
-                         'buy' => (string)(float)$l['buy_rate_sar'], 'sell' => (string)(float)$l['sell_rate_sar']];
+                         'buy' => (string)(float)$l['buy_rate_pkr'], 'sell' => (string)(float)$l['sell_rate_pkr']];
         }
         $overrides = [];
         foreach ($legs as $leg) {
             $o = ['route' => strtoupper((string)$leg['route_details']), 'type' => '', 'buy' => '', 'sell' => ''];
             if ((string)$leg['vehicle_type'] !== (string)($b['transport_type'] ?: 'CAR')) $o['type'] = (string)$leg['vehicle_type'];
-            if ((float)$leg['buy_rate_sar'] !== (float)$b['transport_buy_rate']) $o['buy'] = (string)(float)$leg['buy_rate_sar'];
-            if ((float)$leg['sell_rate_sar'] !== (float)$b['transport_sell_rate']) $o['sell'] = (string)(float)$leg['sell_rate_sar'];
+            if ((float)$leg['buy_rate_pkr'] !== (float)$b['transport_buy_rate']) $o['buy'] = (string)(float)$leg['buy_rate_pkr'];
+            if ((float)$leg['sell_rate_pkr'] !== (float)$b['transport_sell_rate']) $o['sell'] = (string)(float)$leg['sell_rate_pkr'];
             if ($o['type'] !== '' || $o['buy'] !== '' || $o['sell'] !== '') $overrides[] = $o;
         }
         $skip = [];

@@ -74,9 +74,9 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                         <th class="p-2.5 border border-slate-300">Departure</th>
                         <th class="p-2.5 border border-slate-300">Mutamer / Description</th>
                         <th class="p-2.5 border border-slate-300">Passport #</th>
-                        <th class="p-2.5 border border-slate-300 text-right">Debit (SAR)</th>
-                        <th class="p-2.5 border border-slate-300 text-right">Credit (SAR)</th>
-                        <th class="p-2.5 border border-slate-300 text-right">Balance (SAR)</th>
+                        <th class="p-2.5 border border-slate-300 text-right">Debit (PKR)</th>
+                        <th class="p-2.5 border border-slate-300 text-right">Credit (PKR)</th>
+                        <th class="p-2.5 border border-slate-300 text-right">Balance (PKR)</th>
                     </tr>
                 </thead>
                 <tbody class="font-mono">
@@ -86,7 +86,7 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                         $recordType = $row['record_type'] ?? '';
                         $isHotel = $recordType === 'hotel';
                         $isTransport = $recordType === 'transport';
-                        $rowClass = $row['credit_sar'] > 0
+                        $rowClass = $row['credit_pkr'] > 0
                             ? 'bg-emerald-50/50'
                             : ($isHotel ? 'bg-amber-50' : ($isTransport ? 'bg-sky-50' : ''));
                     ?>
@@ -103,9 +103,9 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                                 <?php if ($isHotel && !empty($row['hotel_names'])): ?><span class="font-sans text-slate-500"> (<?= htmlspecialchars($row['hotel_names']) ?>)</span><?php endif; ?>
                             </td>
                             <td class="p-2 border border-slate-300 font-bold"><?= htmlspecialchars($row['passport_number'] ?: '-') ?></td>
-                            <td class="p-2 border border-slate-300 text-right text-rose-600 font-bold"><?= $row['debit_sar'] > 0 ? number_format((float)$row['debit_sar'], 0) : '-' ?></td>
-                            <td class="p-2 border border-slate-300 text-right text-emerald-600 font-bold"><?= $row['credit_sar'] > 0 ? number_format((float)$row['credit_sar'], 0) : '-' ?></td>
-                            <td class="p-2 border border-slate-300 text-right font-black text-slate-900"><?= number_format((float)$row['balance_sar'], 0) ?></td>
+                            <td class="p-2 border border-slate-300 text-right text-rose-600 font-bold"><?= $row['debit_pkr'] > 0 ? number_format((float)$row['debit_pkr'], 0) : '-' ?></td>
+                            <td class="p-2 border border-slate-300 text-right text-emerald-600 font-bold"><?= $row['credit_pkr'] > 0 ? number_format((float)$row['credit_pkr'], 0) : '-' ?></td>
+                            <td class="p-2 border border-slate-300 text-right font-black text-slate-900"><?= number_format((float)$row['balance_pkr'], 0) ?></td>
                         </tr>
                     <?php endforeach; endif; ?>
                 </tbody>
@@ -113,7 +113,7 @@ $bankDetails = array_values(array_filter(array_map('trim', explode("
                     <tr>
                         <td colspan="8" class="p-3 border border-slate-300 text-right font-sans text-xs">Closing Outstanding Balance:</td>
                         <td class="p-3 border border-slate-300 text-right font-mono font-black text-sm text-rose-700">
-                            <?= number_format((float)$data['current_balance_sar'], 0) ?> SAR
+                            <?= number_format((float)$data['current_balance_pkr'], 0) ?> PKR
                         </td>
                     </tr>
                 </tfoot>

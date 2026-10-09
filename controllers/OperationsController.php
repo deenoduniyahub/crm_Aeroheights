@@ -10,6 +10,37 @@ require_once __DIR__ . '/VoucherShare.php';
  */
 class OperationsController {
 
+    /** Split connected ticket segments into outbound/return journeys. */
+    private static function itineraryJourneys(array $segments): array {
+        usort($segments, static fn(array $a, array $b): int => strcmp(
+            (string)($a['dep_date'] ?? '') . (string)($a['dep_time'] ?? ''),
+            (string)($b['dep_date'] ?? '') . (string)($b['dep_time'] ?? '')
+        ));
+        $journeys = [];
+        foreach ($segments as $segment) {
+            if (!is_array($segment)) continue;
+            $lastJourney = $journeys ? $journeys[count($journeys) - 1] : [];
+            $last = $lastJourney ? $lastJourney[count($lastJourney) - 1] : null;
+            $connects = false;
+            if ($last && ($last['to'] ?? '') === ($segment['from'] ?? '') && !empty($last['arr_date']) && !empty($segment['dep_date'])) {
+                $arrived = strtotime($last['arr_date'] . ' ' . ($last['arr_time'] ?: '12:00'));
+                $departed = strtotime($segment['dep_date'] . ' ' . ($segment['dep_time'] ?: '12:00'));
+                $gap = $departed - $arrived;
+                $connects = $gap >= 0 && $gap <= 86400;
+            }
+            if ($connects) $journeys[count($journeys) - 1][] = $segment;
+            else $journeys[] = [$segment];
+        }
+        return $journeys;
+    }
+
+    private static function journeyRoute(array $journey): string {
+        if (!$journey) return '';
+        $from = trim((string)($journey[0]['from'] ?? ''));
+        $to = trim((string)($journey[count($journey) - 1]['to'] ?? ''));
+        return $from !== '' && $to !== '' ? $from . ' → ' . $to : '';
+    }
+
     /**
      * Retrieve complete operational manifest for any date.
      */
@@ -26,6 +57,7 @@ class OperationsController {
                             mb.passenger_name,
                             mb.passport_number,
                             mb.flight_number,
+                            mb.flight_itinerary_json,
                             mb.arrival_date,
                             mb.departure_date,
                             mb.stay_days,
@@ -38,11 +70,41 @@ class OperationsController {
                             hv.flight_out_to
                         FROM master_bookings mb
                         JOIN agents a ON mb.agent_id = a.id
-                        JOIN vendors v ON mb.vendor_id = v.id
+                        LEFT JOIN vendors v ON mb.vendor_id = v.id
                         LEFT JOIN hotel_vouchers hv ON hv.master_booking_id = mb.id AND hv.deleted_at IS NULL
-                        WHERE mb.deleted_at IS NULL AND (mb.arrival_date = ? OR hv.flight_out_arr_date = ?)
+                        WHERE mb.deleted_at IS NULL AND (
+                            mb.arrival_date = ? OR hv.flight_out_arr_date = ?
+                            OR mb.flight_itinerary_json LIKE ?
+                        )
                         ORDER BY mb.flight_number ASC";
-        $arrivals = Database::fetchAll($sqlArrivals, [$targetDate, $targetDate]);
+        $arrivalBookings = Database::fetchAll($sqlArrivals, [$targetDate, $targetDate, '%' . $targetDate . '%']);
+        $arrivals = [];
+        foreach ($arrivalBookings as $booking) {
+            $itinerary = json_decode((string)($booking['flight_itinerary_json'] ?? ''), true);
+            $itinerary = is_array($itinerary) ? $itinerary : [];
+            $journeys = self::itineraryJourneys($itinerary);
+            $fromJourney = $journeys[0] ?? [];
+            $returnJourney = count($journeys) > 1 ? $journeys[count($journeys) - 1] : [];
+            $arrivalLeg = $fromJourney ? $fromJourney[count($fromJourney) - 1] : null;
+            $journeyArrivalDate = (string)($arrivalLeg['arr_date'] ?? '');
+            $legacyArrival = ($booking['arrival_date'] ?? '') === $targetDate || ($booking['flight_out_arr_date'] ?? '') === $targetDate;
+
+            if ($journeyArrivalDate === $targetDate || $legacyArrival) {
+                $arrivals[] = array_merge($booking, [
+                    'flight_number' => trim((string)($arrivalLeg['flight'] ?? '')) ?: $booking['flight_number'],
+                    'flight_out_from' => trim((string)($arrivalLeg['from'] ?? $booking['flight_out_from'] ?? '')),
+                    'flight_out_to' => trim((string)($arrivalLeg['to'] ?? $booking['flight_out_to'] ?? '')),
+                    'flight_out_arr_time' => trim((string)($arrivalLeg['arr_time'] ?? $booking['flight_out_arr_time'] ?? '')),
+                    'from_route' => self::journeyRoute($fromJourney),
+                    'from_date' => (string)($fromJourney[0]['dep_date'] ?? $booking['arrival_date'] ?? ''),
+                    'from_legs' => $fromJourney,
+                    'return_route' => self::journeyRoute($returnJourney),
+                    'return_date' => (string)($returnJourney[0]['dep_date'] ?? $booking['departure_date'] ?? ''),
+                    'return_flight_number' => trim((string)($returnJourney[0]['flight'] ?? '')),
+                    'return_legs' => $returnJourney,
+                ]);
+            }
+        }
 
         // 2. Transport Transfers & Pickups
         $sqlTransports = "SELECT 
@@ -56,7 +118,7 @@ class OperationsController {
                             tb.vehicle_type,
                             tb.pickup_time,
                             tb.route_details,
-                            tb.sell_rate_sar,
+                            tb.sell_rate_pkr,
                             tb.status,
                             tb.driver_name,
                             tb.driver_contact,
@@ -396,4 +458,3 @@ class OperationsController {
         ];
     }
 }
-

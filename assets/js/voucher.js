@@ -80,7 +80,7 @@ function createStayRowHtml() {
             <input type="number" step="0.01" oninput="recalculateStayCost(this)" placeholder="0.00" class="stay-sell-rate w-full border border-slate-300 rounded-lg p-2 font-mono font-bold text-emerald-700 outline-none text-center">
         </div>
         <div class="md:col-span-1 flex items-center justify-between pb-1">
-            <div class="text-[11px] font-bold text-slate-700 font-mono stay-total-display">0 SAR</div>
+            <div class="text-[11px] font-bold text-slate-700 font-mono stay-total-display">0 PKR</div>
             <button type="button" onclick="removeStayRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1" title="Remove Stay">
                 <i class="fa-solid fa-trash-can"></i>
             </button>
@@ -157,7 +157,7 @@ function recalculateStayCost(element) {
     const nights = Math.max(0, parseFloat(row.querySelector('.stay-nights')?.value) || 0);
     const sellRate = Math.max(0, parseFloat(row.querySelector('.stay-sell-rate')?.value) || 0);
     const totalDisplay = row.querySelector('.stay-total-display');
-    if (totalDisplay) totalDisplay.textContent = `${(nights * sellRate).toFixed(2)} SAR`;
+    if (totalDisplay) totalDisplay.textContent = `${(nights * sellRate).toFixed(2)} PKR`;
     updateGrandVoucherTotals();
 }
 
@@ -401,16 +401,32 @@ function vcSearchMasterBookings(query) {
                 return;
             }
 
-            resultsBox.innerHTML = results.map(r => `
-                <button type="button" onclick='vcSelectMasterBooking(${JSON.stringify(r).replace(/'/g, "&#39;")})' class="w-full text-left px-3 py-2 hover:bg-indigo-50 border-b border-slate-100 last:border-b-0 transition">
+            resultsBox.innerHTML = results.map(r => {
+                let route = '';
+                const bookingJson = JSON.stringify(r).replace(/[<>&']/g, character => ({
+                    '<': '\\u003c',
+                    '>': '\\u003e',
+                    '&': '\\u0026',
+                    "'": '\\u0027'
+                })[character]);
+                try {
+                    const segments = Array.isArray(r.flight_itinerary_json) ? r.flight_itinerary_json : JSON.parse(r.flight_itinerary_json || '[]');
+                    if (Array.isArray(segments) && segments.length) route = segments.map(s => `${s.from || '?'}→${s.to || '?'} ${s.dep_date || ''} ${s.dep_time || ''}`).join(' · ');
+                } catch (error) {
+                    console.error('Unable to display the Master Booking flight itinerary.', error);
+                }
+                return `
+                <button type="button" onclick='vcSelectMasterBooking(${bookingJson})' class="w-full text-left px-3 py-2 hover:bg-indigo-50 border-b border-slate-100 last:border-b-0 transition">
                     <div class="font-bold text-slate-800">${escapeHtml(r.passenger_name || '-')} <span class="font-mono text-indigo-600 text-[10px]">${escapeHtml(r.booking_code || '')}</span></div>
                     <div class="text-[10px] text-slate-500">
                         ${r.flight_number ? 'Flight ' + escapeHtml(r.flight_number) + ' &middot; ' : ''}
                         Arr: ${escapeHtml(r.arrival_date || '-')} &middot; Dep: ${escapeHtml(r.departure_date || '-')}
                         ${r.agent_name ? ' &middot; Agent: ' + escapeHtml(r.agent_name) : ''}
                     </div>
+                    ${route ? `<div class="mt-0.5 text-[10px] text-sky-700">${escapeHtml(route)}</div>` : ''}
                 </button>
-            `).join('');
+            `;
+            }).join('');
             resultsBox.classList.remove('hidden');
         } catch (error) {
             resultsBox.innerHTML = '<div class="p-3 text-rose-500 text-center">Search failed. Please retry.</div>';
@@ -423,6 +439,8 @@ function vcSelectMasterBooking(booking) {
     if (!vcSelectedMasterBookings.some(m => String(m.id) === String(booking.id))) {
         vcSelectedMasterBookings.push(booking);
     }
+    vcSyncMutamerManifest();
+    vcPrefillFlightsFromMasterBooking(booking);
     vcRenderSelectedMasterBookings();
     const search = document.getElementById('vc_master_search');
     if (search) search.value = '';
@@ -432,7 +450,82 @@ function vcSelectMasterBooking(booking) {
 
 function vcRemoveMasterBooking(id) {
     vcSelectedMasterBookings = vcSelectedMasterBookings.filter(m => String(m.id) !== String(id));
+    vcSyncMutamerManifest();
     vcRenderSelectedMasterBookings();
+}
+
+function vcSyncMutamerManifest() {
+    const container = document.getElementById('voucherMutamersContainer');
+    if (!container) return;
+    const selected = new Map(vcSelectedMasterBookings.map(m => [String(m.id), m]));
+    container.querySelectorAll('.mutamer-item[data-master-booking-id]').forEach(row => {
+        if (!selected.has(row.dataset.masterBookingId)) row.remove();
+    });
+
+    for (const booking of vcSelectedMasterBookings) {
+        const id = String(booking.id);
+        if (Array.from(container.querySelectorAll('.mutamer-item[data-master-booking-id]')).some(row => row.dataset.masterBookingId === id)) continue;
+        const name = (booking.passenger_name || '').trim();
+        const passport = (booking.passport_number || '').trim().toUpperCase();
+        let row = Array.from(container.querySelectorAll('.mutamer-item')).find(item =>
+            !item.dataset.masterBookingId &&
+            ((passport && item.querySelector('.mut-pass')?.value.trim().toUpperCase() === passport) ||
+             (name && item.querySelector('.mut-name')?.value.trim().toUpperCase() === name.toUpperCase()))
+        );
+        if (!row) {
+            row = Array.from(container.querySelectorAll('.mutamer-item')).find(item =>
+                !item.dataset.masterBookingId &&
+                !item.querySelector('.mut-name')?.value.trim() &&
+                !item.querySelector('.mut-pass')?.value.trim()
+            );
+        }
+        if (!row) {
+            addVoucherMutamerRow();
+            row = container.lastElementChild;
+        }
+        if (!row) continue;
+        row.dataset.masterBookingId = id;
+        row.querySelector('.mut-name').value = name;
+        row.querySelector('.mut-pass').value = passport;
+        if (['M', 'F'].includes((booking.gender || '').toUpperCase())) row.querySelector('.mut-gender').value = booking.gender.toUpperCase();
+        if (['Adult', 'Child', 'Infant'].includes(booking.pax_type)) row.querySelector('.mut-pax').value = booking.pax_type;
+    }
+    updateVoucherPaxSummary();
+}
+
+function vcPrefillFlightsFromMasterBooking(booking) {
+    let segments = [];
+    try {
+        segments = Array.isArray(booking.flight_itinerary_json)
+            ? booking.flight_itinerary_json
+            : JSON.parse(booking.flight_itinerary_json || '[]');
+    } catch (error) {
+        console.error('Unable to read Master Booking flight itinerary.', error);
+        return;
+    }
+    if (!Array.isArray(segments) || !segments.length) return;
+    const fill = (id, value) => {
+        const input = document.getElementById(id);
+        if (input && !input.value && value) input.value = value;
+    };
+    const outbound = segments[0];
+    fill('vc_out_flight_no', outbound.flight || '');
+    fill('vc_out_from', outbound.from || '');
+    fill('vc_out_to', outbound.to || '');
+    fill('vc_out_dep_date', outbound.dep_date || '');
+    fill('vc_out_dep_time', outbound.dep_time || '');
+    fill('vc_out_arr_date', outbound.arr_date || '');
+    fill('vc_out_arr_time', outbound.arr_time || '');
+    if (segments.length > 1) {
+        const returning = segments[segments.length - 1];
+        fill('vc_ret_flight_no', returning.flight || '');
+        fill('vc_ret_from', returning.from || '');
+        fill('vc_ret_to', returning.to || '');
+        fill('vc_ret_dep_date', returning.dep_date || '');
+        fill('vc_ret_dep_time', returning.dep_time || '');
+        fill('vc_ret_arr_date', returning.arr_date || '');
+        fill('vc_ret_arr_time', returning.arr_time || '');
+    }
 }
 
 function vcRenderSelectedMasterBookings() {

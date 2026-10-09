@@ -38,11 +38,11 @@ $agent = $ledgerData['agent'] ?? null;
             <!-- Balance Card -->
             <div class="bg-rose-50/70 border border-rose-100 px-3 py-1.5 rounded-lg text-right">
                 <span class="text-[9px] font-bold text-rose-500 uppercase block tracking-wide">Receivable Balance</span>
-                <span class="text-sm font-bold text-rose-700 font-mono"><?= number_format((float)$ledgerData['current_balance_sar'], 0) ?> SAR</span>
+                <span class="text-sm font-bold text-rose-700 font-mono"><?= number_format((float)$ledgerData['current_balance_pkr'], 0) ?> PKR</span>
             </div>
 
             <button type="button" onclick="openAgentPaymentModal(<?= $selectedAgentId ?>, '<?= htmlspecialchars(addslashes($agent['name'] ?? 'Agent')) ?>')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold px-3 py-2 rounded-lg transition shadow-sm flex items-center">
-                <i class="fa-solid fa-money-bill-wave mr-1.5"></i> Receive Payment (PKR/SAR)
+                <i class="fa-solid fa-money-bill-wave mr-1.5"></i> Receive Payment (PKR)
             </button>
 
             <button type="button" onclick="openAgentAdjustmentModal(<?= $selectedAgentId ?>, '<?= htmlspecialchars(addslashes($agent['name'] ?? 'Agent')) ?>')" class="bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-semibold px-3 py-2 rounded-lg transition shadow-sm flex items-center">
@@ -74,9 +74,9 @@ $agent = $ledgerData['agent'] ?? null;
                         <th class="px-2.5 py-2.5 whitespace-nowrap">Departure</th>
                         <th class="px-2.5 py-2.5">Mutamer Name / Description</th>
                         <th class="px-2.5 py-2.5 whitespace-nowrap">Passport #</th>
-                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Debit / Rate (SAR)</th>
-                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Credit / Paid (SAR)</th>
-                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Running Balance (SAR)</th>
+                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Debit / Rate (PKR)</th>
+                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Credit / Paid (PKR)</th>
+                        <th class="px-2.5 py-2.5 text-right whitespace-nowrap">Running Balance (PKR)</th>
                         <th class="px-2.5 py-2.5 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -85,7 +85,7 @@ $agent = $ledgerData['agent'] ?? null;
                         <tr><td colspan="10" class="p-6 text-center text-slate-400">No transactions recorded for this client.</td></tr>
                     <?php else: foreach ($ledgerData['ledger'] as $row): 
                         $recordType = $row['record_type'] ?? '';
-                        $isPayment = $recordType === 'payment' || (float)$row['credit_sar'] > 0;
+                        $isPayment = $recordType === 'payment' || (float)$row['credit_pkr'] > 0;
                         $isAdjustment = $recordType === 'adjustment';
                         $isHotel = $recordType === 'hotel';
                         $isTransport = $recordType === 'transport';
@@ -119,11 +119,11 @@ $agent = $ledgerData['agent'] ?? null;
                                 <?php if ($isHotel && !empty($row['hotel_names'])): ?><span class="text-slate-500 font-normal"> (<?= htmlspecialchars($row['hotel_names']) ?>)</span><?php endif; ?>
                             </td>
                             <td class="px-2.5 py-2 font-mono text-[10px] text-slate-500 whitespace-nowrap"><?= htmlspecialchars($row['passport_number'] ?: '-') ?></td>
-                            <td class="px-2.5 py-2 text-right font-mono text-rose-600 font-semibold whitespace-nowrap"><?= $row['debit_sar'] > 0 ? number_format((float)$row['debit_sar'], 0) : '-' ?></td>
+                            <td class="px-2.5 py-2 text-right font-mono text-rose-600 font-semibold whitespace-nowrap"><?= $row['debit_pkr'] > 0 ? number_format((float)$row['debit_pkr'], 0) : '-' ?></td>
                             <td class="px-2.5 py-2 text-right font-mono font-semibold whitespace-nowrap <?= $isPayment ? 'text-emerald-700' : 'text-slate-400' ?>">
-                                <?= $row['credit_sar'] > 0 ? number_format((float)$row['credit_sar'], 0) : '-' ?>
+                                <?= $row['credit_pkr'] > 0 ? number_format((float)$row['credit_pkr'], 0) : '-' ?>
                             </td>
-                            <td class="px-2.5 py-2 text-right font-mono font-semibold text-slate-800 whitespace-nowrap"><?= number_format((float)$row['balance_sar'], 0) ?></td>
+                            <td class="px-2.5 py-2 text-right font-mono font-semibold text-slate-800 whitespace-nowrap"><?= number_format((float)$row['balance_pkr'], 0) ?></td>
                             <td class="px-2.5 py-2 text-right whitespace-nowrap">
                                 <?php if ($isPayment): ?>
                                     <button type="button" onclick='editAgentPayment(<?= json_encode([
@@ -133,9 +133,7 @@ $agent = $ledgerData['agent'] ?? null;
                                         'bank_name' => $row['bank_name'] ?? preg_replace('/^Payment Received: /', '', (string)$row['passenger_name']),
                                         'receipt_number' => $row['flight_number'] ?? '',
                                         'remarks' => $row['remarks'] ?? '',
-                                        'amount_pkr' => (float)($row['amount_pkr'] ?? 0),
-                                        'exchange_rate' => (float)($row['exchange_rate'] ?? 0),
-                                        'amount_sar' => (float)$row['credit_sar']
+                                        'amount_pkr' => (float)($row['amount_pkr'] ?? $row['credit_pkr'])
                                     ], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>)' class="text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 p-1.5 rounded-md transition" title="Edit payment">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
@@ -153,7 +151,7 @@ $agent = $ledgerData['agent'] ?? null;
                     <tr>
                         <td colspan="9" class="px-3 py-2.5 text-right text-[11px]">Closing Outstanding Balance:</td>
                         <td class="px-2.5 py-2.5 text-right font-mono font-bold text-xs text-rose-600 whitespace-nowrap">
-                            <?= number_format((float)$ledgerData['current_balance_sar'], 0) ?> SAR
+                            <?= number_format((float)$ledgerData['current_balance_pkr'], 0) ?> PKR
                         </td>
                     </tr>
                 </tfoot>

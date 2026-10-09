@@ -107,9 +107,7 @@ class VoucherController {
             }
             $name = trim((string)($m['name'] ?? ''));
             $passport = strtoupper(trim((string)($m['passport'] ?? '')));
-            if ($name === '' || $passport === '') {
-                continue;
-            }
+            if ($name === '') continue;
 
             $gender = ($m['gender'] ?? 'M') === 'F' ? 'F' : 'M';
             $adultValue = $m['is_adult'] ?? 'Adult';
@@ -287,7 +285,7 @@ class VoucherController {
                     total_pax, total_beds, total_nights, transporter_info, transport_type,
                     flight_out_no, flight_out_from, flight_out_to, flight_out_dep_date, flight_out_dep_time, flight_out_arr_date, flight_out_arr_time,
                     flight_ret_no, flight_ret_from, flight_ret_to, flight_ret_dep_date, flight_ret_dep_time, flight_ret_arr_date, flight_ret_arr_time,
-                    buy_rate_sar, sell_rate_sar, special_instructions,
+                    buy_rate_pkr, sell_rate_pkr, special_instructions,
                     transport_auto_enabled, transport_auto_type, transport_auto_buy_rate, transport_auto_sell_rate,
                     created_by, created_at, updated_by, updated_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, NOW())",
@@ -347,7 +345,7 @@ class VoucherController {
                     total_pax = ?, total_beds = ?, total_nights = ?, transporter_info = ?, transport_type = ?,
                     flight_out_no = ?, flight_out_from = ?, flight_out_to = ?, flight_out_dep_date = ?, flight_out_dep_time = ?, flight_out_arr_date = ?, flight_out_arr_time = ?,
                     flight_ret_no = ?, flight_ret_from = ?, flight_ret_to = ?, flight_ret_dep_date = ?, flight_ret_dep_time = ?, flight_ret_arr_date = ?, flight_ret_arr_time = ?,
-                    buy_rate_sar = ?, sell_rate_sar = ?, special_instructions = ?,
+                    buy_rate_pkr = ?, sell_rate_pkr = ?, special_instructions = ?,
                     transport_auto_enabled = ?, transport_auto_type = ?, transport_auto_buy_rate = ?, transport_auto_sell_rate = ?,
                     updated_by = ?, updated_at = NOW()
                 WHERE id = ?",
@@ -420,7 +418,8 @@ class VoucherController {
 
         $placeholders = implode(',', array_fill(0, count($masterBookingIds), '?'));
         $valid = Database::fetchAll(
-            "SELECT id, booking_code, passenger_name, passport_number, flight_number, arrival_date, departure_date
+            "SELECT id, booking_code, passenger_name, passport_number, flight_number, flight_itinerary_json,
+                    gender, pax_type, arrival_date, departure_date
              FROM master_bookings WHERE deleted_at IS NULL AND id IN ({$placeholders})",
             $masterBookingIds
         );
@@ -534,7 +533,7 @@ class VoucherController {
         $sql = "INSERT INTO transport_bookings (
                     master_booking_id, voucher_id, agent_id, vendor_id, service_date, flight_number, terminal,
                     pax_name, passport_number, pax_count, vehicle_type, pickup_time, route_details,
-                    buy_rate_sar, sell_rate_sar, status, auto_generated, created_by, created_at, updated_by, updated_at
+                    buy_rate_pkr, sell_rate_pkr, status, auto_generated, created_by, created_at, updated_by, updated_at
                 ) VALUES (?, ?, ?, NULL, ?, ?, 'Terminal 1', ?, ?, ?, ?, ?, ?, ?, ?, 'scheduled', 1, ?, NOW(), ?, NOW())";
 
         $overrides = $base['transport_route_overrides'] ?? [];
@@ -598,7 +597,8 @@ class VoucherController {
             [$voucherId]
         );
         $voucher['master_bookings'] = Database::fetchAll(
-            "SELECT mb.id, mb.booking_code, mb.passenger_name, mb.passport_number, mb.flight_number, mb.arrival_date, mb.departure_date
+            "SELECT mb.id, mb.booking_code, mb.passenger_name, mb.passport_number, mb.flight_number,
+                    mb.flight_itinerary_json, mb.gender, mb.pax_type, mb.arrival_date, mb.departure_date
              FROM hotel_voucher_master_links l
              JOIN master_bookings mb ON mb.id = l.master_booking_id AND mb.deleted_at IS NULL
              WHERE l.voucher_id = ?
@@ -606,7 +606,7 @@ class VoucherController {
             [$voucherId]
         );
         $voucher['transport_legs'] = Database::fetchAll(
-            "SELECT route_details, vehicle_type, buy_rate_sar, sell_rate_sar, service_date, auto_generated
+            "SELECT route_details, vehicle_type, buy_rate_pkr, sell_rate_pkr, service_date, auto_generated
              FROM transport_bookings
              WHERE voucher_id = ? AND auto_generated IN (1, 2) AND deleted_at IS NULL
              ORDER BY service_date ASC, id ASC",

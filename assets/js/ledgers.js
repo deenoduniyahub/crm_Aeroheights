@@ -1,28 +1,7 @@
 /**
- * Advanced Financial Ledger & Currency Conversion Engine
+ * Advanced Financial Ledger
  * Aeroheights Travels & Tours - Umrah ERP
  */
-
-// Live PKR to SAR Conversion with Standard Mathematical Rounding
-function calculateLiveConversion() {
-    const pkrInput = document.getElementById('modal_pay_pkr');
-    const rateInput = document.getElementById('modal_pay_rate');
-    const displayElement = document.getElementById('modal_converted_sar');
-
-    if (!pkrInput || !displayElement) return;
-
-    const pkr = parseFloat(pkrInput.value) || 0;
-    const rate = parseFloat(rateInput ? rateInput.value : 76.00) || 76.00;
-
-    if (rate <= 0 || pkr <= 0) {
-        displayElement.textContent = '0 SAR';
-        return;
-    }
-
-    // Standard Math Rounding: < .50 rounds down, >= .50 rounds up
-    const sar = Math.round(pkr / rate);
-    displayElement.textContent = `${sar.toLocaleString('en-US')} SAR`;
-}
 
 // Modal: Receive Payment from Agent (Accounts Receivable)
 function openAgentPaymentModal(agentId, agentName) {
@@ -57,19 +36,9 @@ function openAgentPaymentModal(agentId, agentName) {
                             <option value="Cash in Hand">Cash in Hand</option>
                         </select>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block font-semibold mb-1 text-slate-700">Amount (PKR)</label>
-                            <input type="number" id="modal_pay_pkr" oninput="calculateLiveConversion()" placeholder="e.g. 300000" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-1 text-slate-700">Exchange Rate (PKR/SAR)</label>
-                            <input type="number" step="0.01" id="modal_pay_rate" oninput="calculateLiveConversion()" value="76.00" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                    </div>
-                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex items-center justify-between">
-                        <span class="font-semibold text-emerald-800">SAR Converted Credit (Rounded):</span>
-                        <span id="modal_converted_sar" class="font-black text-sm text-emerald-900 font-mono">0 SAR</span>
+                    <div>
+                        <label class="block font-semibold mb-1 text-slate-700">Amount (PKR)</label>
+                        <input type="number" step="0.01" min="0.01" id="modal_pay_pkr" placeholder="e.g. 300000" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -114,7 +83,6 @@ async function submitAgentPaymentDirect(e, agentId) {
         agent_id: agentId,
         bank_name: document.getElementById('modal_pay_bank').value,
         amount_pkr: document.getElementById('modal_pay_pkr').value,
-        exchange_rate: document.getElementById('modal_pay_rate').value,
         payment_date: document.getElementById('modal_pay_date').value,
         receipt_number: document.getElementById('modal_pay_receipt').value,
         remarks: document.getElementById('modal_pay_remarks').value
@@ -165,8 +133,7 @@ function editAgentPayment(payment) {
                 <form id="editAgentPaymentForm" class="space-y-3 text-xs">
                     <input type="hidden" name="payment_id" value="${payment.payment_id}"><input type="hidden" name="agent_id" value="${payment.agent_id}">
                     <div><label class="block font-semibold mb-1 text-slate-700">Payment Date</label><input type="date" name="payment_date" value="${escapeHtml(payment.payment_date)}" required class="w-full border rounded-xl p-2.5 font-mono"></div>
-                    <div><label class="block font-semibold mb-1 text-slate-700">Amount (PKR)</label><input type="number" step="0.01" min="1" name="amount_pkr" value="${payment.amount_pkr}" required class="w-full border rounded-xl p-2.5 font-mono"></div>
-                    <div><label class="block font-semibold mb-1 text-slate-700">Exchange Rate (PKR/SAR)</label><input type="number" step="0.01" min="0.01" name="exchange_rate" value="${payment.exchange_rate}" required class="w-full border rounded-xl p-2.5 font-mono"></div>
+                    <div><label class="block font-semibold mb-1 text-slate-700">Amount (PKR)</label><input type="number" step="0.01" min="0.01" name="amount_pkr" value="${payment.amount_pkr}" required class="w-full border rounded-xl p-2.5 font-mono"></div>
                     <div><label class="block font-semibold mb-1 text-slate-700">Bank Name / Cash Vault</label><input type="text" name="bank_name" value="${escapeHtml(payment.bank_name)}" required class="w-full border rounded-xl p-2.5"></div>
                     <div><label class="block font-semibold mb-1 text-slate-700">Receipt / Reference No.</label><input type="text" name="receipt_number" value="${escapeHtml(payment.receipt_number)}" class="w-full border rounded-xl p-2.5"></div>
                     <div><label class="block font-semibold mb-1 text-slate-700">Remarks</label><input type="text" name="remarks" value="${escapeHtml(payment.remarks)}" class="w-full border rounded-xl p-2.5"></div>
@@ -216,7 +183,7 @@ function openAgentAdjustmentModal(agentId, agentName) {
                         <input type="date" id="adjustment_date" value="${today}" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
-                        <label class="block font-semibold mb-1 text-slate-700">Amount (SAR)</label>
+                        <label class="block font-semibold mb-1 text-slate-700">Amount (PKR)</label>
                         <input type="number" min="0.01" step="0.01" id="adjustment_amount" placeholder="e.g. 250" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-amber-700 outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
@@ -257,7 +224,7 @@ async function submitAgentAdjustment(e, agentId) {
             body: JSON.stringify({
                 agent_id: agentId,
                 adjustment_date: document.getElementById('adjustment_date').value,
-                amount_sar: document.getElementById('adjustment_amount').value,
+                amount_pkr: document.getElementById('adjustment_amount').value,
                 reason: document.getElementById('adjustment_reason').value
             })
         });
@@ -299,8 +266,8 @@ function openVendorPaymentModal(vendorId, vendorName) {
                 </div>
                 <form id="vendorPaymentForm" onsubmit="submitVendorDisbursement(event, ${vendorId})" class="space-y-3.5 text-xs">
                     <div>
-                        <label class="block font-semibold mb-1 text-slate-700">Disbursement Amount (SAR)</label>
-                        <input type="number" step="1" id="vmodal_amount_sar" placeholder="e.g. 2000" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-cyan-800 outline-none focus:ring-2 focus:ring-cyan-600">
+                        <label class="block font-semibold mb-1 text-slate-700">Disbursement Amount (PKR)</label>
+                        <input type="number" step="1" id="vmodal_amount_pkr" placeholder="e.g. 2000" required class="w-full border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-cyan-800 outline-none focus:ring-2 focus:ring-cyan-600">
                     </div>
                     <div>
                         <label class="block font-semibold mb-1 text-slate-700">Disbursement Mode</label>
@@ -352,7 +319,7 @@ async function submitVendorDisbursement(e, vendorId) {
 
     const payload = {
         vendor_id: vendorId,
-        amount_sar: Math.round(parseFloat(document.getElementById('vmodal_amount_sar').value) || 0),
+        amount_pkr: Math.round(parseFloat(document.getElementById('vmodal_amount_pkr').value) || 0),
         payment_mode: document.getElementById('vmodal_payment_mode').value,
         payment_date: document.getElementById('vmodal_payment_date').value,
         reference_number: document.getElementById('vmodal_ref_number').value,

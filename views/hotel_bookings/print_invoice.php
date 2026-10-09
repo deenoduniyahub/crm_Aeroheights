@@ -181,8 +181,8 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
                     <th>Checkout</th>
                     <th style="width:44px;">Nights</th>
                     <th>Meal Plan</th>
-                    <th class="text-right">Rate/Night (SAR)</th>
-                    <th class="text-right">Amount (SAR)</th>
+                    <th class="text-right">Rate/Night (PKR)</th>
+                    <th class="text-right">Amount (PKR)</th>
                 </tr>
             </thead>
             <tbody>
@@ -205,15 +205,15 @@ $hotelSummary = implode(' / ', array_map(static fn($s) => $s['hotel_name'] . ' (
                     <td colspan="5" class="text-right font-bold" style="background:#F6F8FC;">Total Nights</td>
                     <td class="text-center font-bold" style="background:#F6F8FC;"><?= (int)$b['total_nights'] ?></td>
                     <td colspan="2" style="background:#F6F8FC;"></td>
-                    <td class="text-right font-bold" style="background:#F6F8FC;"><?= number_format((float)$b['sell_total_sar'], 2) ?></td>
+                    <td class="text-right font-bold" style="background:#F6F8FC;"><?= number_format((float)$b['sell_total_pkr'], 2) ?></td>
                 </tr>
             </tfoot>
         </table>
         </div>
 
         <div class="totals-box">
-            <div><span>Net Accommodation Charges</span><span class="font-mono">SAR <?= number_format((float)$b['sell_total_sar'], 2) ?></span></div>
-            <div><span>Total Amount Payable</span><span class="font-mono">SAR <?= number_format((float)$b['sell_total_sar'], 2) ?></span></div>
+            <div><span>Net Accommodation Charges</span><span class="font-mono">PKR <?= number_format((float)$b['sell_total_pkr'], 2) ?></span></div>
+            <div><span>Total Amount Payable</span><span class="font-mono">PKR <?= number_format((float)$b['sell_total_pkr'], 2) ?></span></div>
         </div>
 
         <?php if ($b['remarks']): ?>

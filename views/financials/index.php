@@ -11,7 +11,7 @@ $report = LedgerController::getBuySellReport($mode, $value);
 $out    = LedgerController::getOutstandingTotals();
 $t      = $report['totals'];
 $money  = static fn(float $v): string => number_format($v, 2);
-$maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $report["rows"])]);
+$maxProfit = max([1, ...array_map(static fn($r) => abs($r["pkr"]["profit"]), $report["rows"])]);
 ?>
 
 <main class="md:col-span-9 space-y-6">
@@ -46,14 +46,14 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
         </form>
     </div>
 
-    <!-- Totals (SAR) -->
+    <!-- Totals (PKR) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
             <div class="flex items-center justify-between">
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Sell</span>
                 <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs"><i class="fa-solid fa-sack-dollar"></i></div>
             </div>
-            <h3 class="text-2xl font-black text-slate-900 mt-2 font-mono"><?= $money($t['sar']['sell']) ?> <span class="text-xs font-normal text-slate-400">SAR</span></h3>
+            <h3 class="text-2xl font-black text-slate-900 mt-2 font-mono"><?= $money($t['pkr']['sell']) ?> <span class="text-xs font-normal text-slate-400">PKR</span></h3>
             <div class="mt-1 text-[11px] text-slate-500">Billed to agents / clients</div>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
@@ -61,7 +61,7 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Buy</span>
                 <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xs"><i class="fa-solid fa-receipt"></i></div>
             </div>
-            <h3 class="text-2xl font-black text-rose-600 mt-2 font-mono"><?= $money($t['sar']['buy']) ?> <span class="text-xs font-normal text-slate-400">SAR</span></h3>
+            <h3 class="text-2xl font-black text-rose-600 mt-2 font-mono"><?= $money($t['pkr']['buy']) ?> <span class="text-xs font-normal text-slate-400">PKR</span></h3>
             <div class="mt-1 text-[11px] text-slate-500">Cost from vendors / suppliers</div>
         </div>
         <div class="p-5 rounded-2xl shadow-sm text-white" style="background-image: linear-gradient(125deg, #161A35 0%, #26206F 55%, #285A9B 100%);">
@@ -69,8 +69,8 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 <span class="text-[11px] font-bold text-blue-100 uppercase tracking-wider">Profit</span>
                 <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-trend-up"></i></div>
             </div>
-            <h3 class="text-2xl font-black mt-2 font-mono"><?= $money($t['sar']['profit']) ?> <span class="text-xs font-normal text-blue-100">SAR</span></h3>
-            <div class="mt-1 text-[11px] font-bold text-amber-300"><?= $t['sar']['margin'] ?>% margin</div>
+            <h3 class="text-2xl font-black mt-2 font-mono"><?= $money($t['pkr']['profit']) ?> <span class="text-xs font-normal text-blue-100">PKR</span></h3>
+            <div class="mt-1 text-[11px] font-bold text-amber-300"><?= $t['pkr']['margin'] ?>% margin</div>
         </div>
     </div>
 
@@ -90,9 +90,9 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-mono">
                     <?php foreach ([
-                        ['Visas & Master Bookings', $t['visas'], 'SAR'],
-                        ['Hotels (Vouchers, Bookings & Stays)', $t['hotels'], 'SAR'],
-                        ['Transport', $t['transports'], 'SAR'],
+                        ['Visas & Master Bookings', $t['visas'], 'PKR'],
+                        ['Hotels (Vouchers, Bookings & Stays)', $t['hotels'], 'PKR'],
+                        ['Transport', $t['transports'], 'PKR'],
                         ['Air Ticket Bookings', $t['tickets'], 'PKR'],
                     ] as [$name, $s, $cur]): ?>
                         <tr class="hover:bg-slate-50 transition">
@@ -106,16 +106,16 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 </tbody>
                 <tfoot class="bg-slate-900 text-white font-mono text-xs">
                     <tr>
-                        <td class="p-3.5 font-sans font-bold">Total (SAR services)</td>
-                        <td class="p-3.5 text-right font-bold"><?= $money($t['sar']['sell']) ?></td>
-                        <td class="p-3.5 text-right"><?= $money($t['sar']['buy']) ?></td>
-                        <td class="p-3.5 text-right font-black text-amber-300"><?= $money($t['sar']['profit']) ?></td>
-                        <td class="p-3.5 text-right"><?= $t['sar']['margin'] ?>%</td>
+                        <td class="p-3.5 font-sans font-bold">Total (All services, PKR)</td>
+                        <td class="p-3.5 text-right font-bold"><?= $money($t['pkr']['sell']) ?></td>
+                        <td class="p-3.5 text-right"><?= $money($t['pkr']['buy']) ?></td>
+                        <td class="p-3.5 text-right font-black text-amber-300"><?= $money($t['pkr']['profit']) ?></td>
+                        <td class="p-3.5 text-right"><?= $t['pkr']['margin'] ?>%</td>
                     </tr>
                 </tfoot>
             </table>
         </div>
-        <p class="px-5 py-2.5 text-[10px] text-slate-400 border-t border-slate-100">Air ticket bookings are priced in PKR and shown separately, never added into the SAR totals.</p>
+        <p class="px-5 py-2.5 text-[10px] text-slate-400 border-t border-slate-100">All services, including air ticket bookings, are reported in PKR.</p>
     </div>
 
     <!-- Breakdown by day (weekly) / by week (monthly) -->
@@ -126,20 +126,20 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 <thead class="bg-slate-100 text-slate-700 uppercase font-bold text-[10px]">
                     <tr>
                         <th class="p-3">Period</th>
-                        <th class="p-3 text-right">Sell (SAR)</th>
-                        <th class="p-3 text-right">Buy (SAR)</th>
-                        <th class="p-3 text-right">Profit (SAR)</th>
+                        <th class="p-3 text-right">Sell (PKR)</th>
+                        <th class="p-3 text-right">Buy (PKR)</th>
+                        <th class="p-3 text-right">Profit (PKR)</th>
                         <th class="p-3 w-32"></th>
                         <th class="p-3 text-right">Tickets Sell (PKR)</th>
                         <th class="p-3 text-right">Tickets Profit (PKR)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-mono">
-                    <?php foreach ($report['rows'] as $r): $p = $r['sar']['profit']; ?>
+                    <?php foreach ($report['rows'] as $r): $p = $r['pkr']['profit']; ?>
                         <tr class="hover:bg-slate-50 transition">
                             <td class="p-3 font-sans font-semibold text-slate-800 whitespace-nowrap"><?= htmlspecialchars($r['label']) ?></td>
-                            <td class="p-3 text-right font-bold text-slate-900"><?= $money($r['sar']['sell']) ?></td>
-                            <td class="p-3 text-right text-rose-600"><?= $money($r['sar']['buy']) ?></td>
+                            <td class="p-3 text-right font-bold text-slate-900"><?= $money($r['pkr']['sell']) ?></td>
+                            <td class="p-3 text-right text-rose-600"><?= $money($r['pkr']['buy']) ?></td>
                             <td class="p-3 text-right font-black <?= $p < 0 ? 'text-rose-600' : 'text-emerald-600' ?>"><?= $money($p) ?></td>
                             <td class="p-3">
                                 <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -162,7 +162,7 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 <span class="text-xs font-bold text-amber-900 uppercase">Receivable from Agents</span>
                 <i class="fa-solid fa-user-clock text-amber-500 text-lg"></i>
             </div>
-            <h4 class="text-2xl font-black text-amber-700 mt-2 font-mono"><?= $money($out['receivable']) ?> SAR</h4>
+            <h4 class="text-2xl font-black text-amber-700 mt-2 font-mono"><?= $money($out['receivable']) ?> PKR</h4>
             <p class="text-xs text-amber-800/80 mt-1">All-time balance still due from B2B agents.</p>
         </a>
         <a href="index.php?page=vendor_ledger" class="block bg-gradient-to-br from-blue-50 to-white p-6 rounded-2xl border border-blue-200 shadow-sm hover:shadow-md transition">
@@ -170,7 +170,7 @@ $maxProfit = max([1, ...array_map(static fn($r) => abs($r["sar"]["profit"]), $re
                 <span class="text-xs font-bold text-blue-900 uppercase">Payable to Vendors</span>
                 <i class="fa-solid fa-handshake text-blue-600 text-lg"></i>
             </div>
-            <h4 class="text-2xl font-black text-blue-800 mt-2 font-mono"><?= $money($out['payable']) ?> SAR</h4>
+            <h4 class="text-2xl font-black text-blue-800 mt-2 font-mono"><?= $money($out['payable']) ?> PKR</h4>
             <p class="text-xs text-blue-800/80 mt-1">All-time balance still owed to visa, hotel and transport vendors.</p>
         </a>
     </div>
